@@ -229,17 +229,73 @@ body {
     width: 600px;
     max-width: 90%;
     background: #fff;
-    box-shadow: 0 0 10px rgba(17, 17, 17, 0.3);
-    padding: 20px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+    padding: 30px;
     z-index: 1000;
-    border-radius: 10px;
+    border-radius: 15px;
+    text-align: center;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
 }
 
 .popup.visible {
     display: block;
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
 }
 
+/* Add a background overlay to darken the screen */
+.popup::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: -1; /* Keeps it behind the popup */
+}
+
+/* Popup content styles */
 .popup-content {
-    text-align: center;
-    
+    padding: 20px;
+    font-size: 24px;
+    color: #333;
+    font-family: 'Arial', sans-serif;
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+/* Add a more vibrant close button */
+.popup .close-btn {
+    display: inline-block;
+    background-color: #ff6347; /* Tomato color */
+    color: #fff;
+    font-size: 16px;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.popup .close-btn:hover {
+    background-color: #e53e3e; /* Darker red on hover */
+}
+
+/* Optional - Animating the popup appearance */
+@keyframes popup-animation {
+    0% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.8);
+    }
+    100% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+}
+
+/* Make popup content animate when it becomes visible */
+.popup.visible .popup-content {
+    animation: popup-animation 0.5s ease-out;
 }
