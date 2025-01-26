@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pincer | Contact</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <div class="top-bar">
+        <a href="/" class="logo">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo">
+        </a>
+        <div class="menu">
+            <a href="/">Home</a>
+            <a href="/restaurants">Restaurants</a>
+            <a href="/about">About us</a>
+            <a href="/join">Join us</a>
+
+        </div>
+    </div>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="profile-picture">
+                <a onclick="tologin()">
+                    <img src="{{ pfpurl }}" alt="Profile Picture">
+                </a>
+            </div>
+            <ul class="sidebar-options">
+                <li><a href="/restaurants">Our partners</a></li>
+                <li><a href="/contact">Meet the Team</a></li>
+                <li><a href="/partnership">Become a partner</a></li>
+                <li><a href="/join">Become a dilivery man</a></li>
+
+            </ul>
+        </aside>
+
+        <!-- Main content -->
+        <main class="main-content">
+            <div class="segments">
+                <a href="https://mail.google.com/mail/?view=cm&fs=1&to={{ email }}" class="segment" style="background-image: url('https://images.pexels.com/photos/3202235/pexels-photo-3202235.jpeg?auto=compress&cs=tinysrgb&w=600');">
+                    <h1 class="segment-title">Reach us via email</h1>
+                    <p class="subtitle">{{ email }}</p>
+                </a>
+
+                <a href="tel:{{ phone }}" class="segment" style="background-image: url('https://images.pexels.com/photos/804065/pexels-photo-804065.jpeg?auto=compress&cs=tinysrgb&w=600');">
+                    <h3 class="segment-title">Call us</h3>
+                    <p class="subtitle">{{ phone }}</p>
+                </a>
+
+                <a href="/about" class="segment" style="background-image: url('https://images.pexels.com/photos/3183150/pexels-photo-3183150.jpeg?auto=compress&cs=tinysrgb&w=600');">
+                    <h3 class="segment-title">About Us</h3>
+                    <p class="subtitle">Pincer is a company dedicated to excellence and innovation. With a team of skilled professionals, we deliver unmatched results.</p>
+                </a>
+            </div>
+        </main>
+    </div>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/l.js') }}"></script>
+
+</body>
+</html>

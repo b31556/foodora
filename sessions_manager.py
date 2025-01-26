@@ -1,0 +1,66 @@
+import random
+import json
+import time
+import user_manager  as um
+
+save_file="activesessions.json"
+
+SESSION_IDLE_TIMEOUT=60*0.5 # if you idle for 10 min (exit app) session is closed
+MAX_TIMEOUT=60*60*3 # 3 hour if the max you have to relogin
+
+sessions=[]
+
+def generateSessionToken():
+    return ''.join(random.choice('0123456789abcdefghijklmnopqrstuvwxyz') for i in range(32))
+
+class Session:
+    def __init__(self, user, token="", id = "", createdat="", lastaction="",data=""):
+        self.user=user
+        self.createdat = time.time() if createdat=="" else createdat
+        self.lastaction = time.time() if lastaction=="" else lastaction
+        self.token = generateSessionToken() if token == "" else token
+        self.id = random.randint(10000000000000,99999999999999) if id == "" else id
+
+    def is_valid(self):
+        if time.time() - self.lastaction > SESSION_IDLE_TIMEOUT:
+            sessions.remove(self)
+            return False
+        if time.time() - self.createdat > MAX_TIMEOUT:
+            sessions.remove(self)
+            return False
+        return True
+
+
+def get(sessionid):
+    """returns the Session object by the session id NOT THE TOKEN!"""
+    for session in sessions:
+        if str(session.id) == str(sessionid):
+            return session
+    return False
+        
+def getbytoken(token: str):
+    """returns the Session object by a session token"""
+    for session in sessions:
+        if session.token == token:
+            return session
+    return False
+
+def remove(session: Session):
+    """removes a session, closes it"""
+    global sessions
+    sessions.remove(session)
+        
+def make(user: um.User):
+    """makes a new session for the user"""
+    global sessions
+    if isinstance(user,um.User):
+        ses=Session(user)
+        sessions.append(ses)
+        return ses
+    else:
+        ses= Session(um.get(id))    
+        sessions.append(ses)
+        return ses
+
+
+

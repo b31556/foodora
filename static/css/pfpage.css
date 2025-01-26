@@ -1,0 +1,80 @@
+/* General body settings */
+body {
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    height: 100%;
+    background-color: #f7f7f7; /* Light background for the body */
+}
+
+/* Main Dashboard Container */
+.dashboard-container {
+    display: flex;
+    flex-direction: row;
+    height: 100vh;
+}
+
+/* Profile Picture */
+.profile-picture {
+    margin-bottom: 30px;
+    display: flex;
+    justify-content: center;
+}
+
+.profile-picture img {
+    width: 120px; /* Larger profile picture */
+    height: 120px;
+    border-radius: 50%;
+    border: 5px solid #ecf0f1;
+    cursor: pointer;
+    transition: transform 0.3s ease-in-out;
+}
+
+.profile-picture img:hover {
+    transform: scale(1.1); /* Slight zoom effect on hover */
+}
+
+/* Content Area */
+.main-content {
+    margin-left: 250px; /* Offset for the sidebar */
+    padding: 30px;
+    background-color: #ffffff;
+    height: 100vh;
+    overflow-y: auto;
+    color: #2c3e50;
+}
+
+/* Header in the Content Area */
+.main-content h1 {
+    font-size: 30px;
+    font-weight: bold;
+    color: #34495e;
+    margin-bottom: 20px;
+}
+
+/* Paragraphs */
+.main-content p {
+    font-size: 16px;
+    line-height: 1.7;
+    color: #7f8c8d;
+    margin-bottom: 30px;
+}
+
+/* Button Style */
+button {
+    background-color: #1e2a38;
+    color: white;
+    padding: 12px 25px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #34495e; /* Hover effect for buttons */
+}
+
+/* Responsive Adjustments */

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pincer | Restaurants</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <div class="top-bar">
+        <a href="/" class="logo">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo">
+        </a>
+        <div class="menu">
+            <a href="/">Home</a>
+            <a href="/about">About us</a>
+            <a href="/contact">Contact</a>
+            <a href="/join">Join us</a>
+        </div>
+    </div>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="profile-picture">
+                <a onclick="tologin()">
+                    <img src="{{ pfpurl }}" alt="Profile Picture">
+                </a>
+            </div>
+            <ul class="sidebar-options">
+                <li><a href="/option1">Option 1</a></li>
+                <li><a href="/option2">Option 2</a></li>
+                <li><a href="/option3">Option 3</a></li>
+            </ul>
+        </aside>
+
+        <!-- Main content -->
+        <main class="main-content">
+            <div class="segments">
+                {% for segment in segments %}
+                <div class="segment" 
+                     style="background-image: url('{{ segment.background }}');"
+                     onclick="navigateToRestaurant('{{ segment.name }}')">
+                    <img src="{{ segment.logo }}" alt="{{ segment.name }} Logo" class="segment-logo">
+                    <h3 class="segment-title">{{ segment.name }}</h3>
+                </div>
+                {% endfor %}
+            </div>
+        </main>
+    </div>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/l.js') }}"></script>
+</body>
+</html>

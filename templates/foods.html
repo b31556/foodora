@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pincer | {{ restaurant }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <div class="top-bar">
+        <a href="/" class="logo">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo">
+        </a>
+        <div class="menu">
+            <a href="/">Home</a>
+            <a href="/restaurants">Restaurants</a> 
+            <a href="/about">About us</a>
+            <a href="/contact">Contact</a>
+            <a href="/join">Join us</a>
+        </div>
+    </div>
+        <!-- Popup Window -->
+        <div id="popup" class="popup">
+            <div class="popup-content">
+                <span class="close-btn" onclick="document.getElementById('popup').classList.toggle('visible')">&times;</span>
+                <h2>Input Elements Demo</h2>
+
+                <label for="text">Text Input:</label>
+                <input type="text" id="text" placeholder="Enter text">
+            
+                <label for="email">Email Input:</label>
+                <input type="email" id="email" placeholder="Enter email">
+            
+                <label for="password">Password Input:</label>
+                <input type="password" id="password" placeholder="Enter password">
+            
+                <label>Radio Buttons:</label>
+                <input type="radio" id="option1" name="radioGroup" value="option1">
+                <label for="option1">Option 1</label>
+                <input type="radio" id="option2" name="radioGroup" value="option2">
+                <label for="option2">Option 2</label>
+            
+                <label>Checkboxes:</label>
+                <input type="checkbox" id="check1">
+                <label for="check1">Check me</label>
+                <input type="checkbox" id="check2">
+                <label for="check2">Check me too</label>
+            
+                <label for="select">Dropdown:</label>
+                <select id="select">
+                    <option value="">Choose an option</option>
+                    <option value="1">First Option</option>
+                    <option value="2">Second Option</option>
+                </select>
+            
+                <label for="range">Range Slider:</label>
+                <input type="range" id="range" min="0" max="100">
+            
+                <label for="date">Date Picker:</label>
+                <input type="date" id="date">
+            
+                <label for="file">File Upload:</label>
+                <input type="file" id="file">
+            
+                <button type="submit">Submit</button>
+            </div>
+        </div>
+    
+
+        
+
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="profile-picture">
+                <a onclick="tologin()">
+                    <img src="{{ pfpurl }}" alt="Profile Picture">
+                </a>
+            </div>
+            <ul class="sidebar-options">
+                <li><a href="/option1">Option 1</a></li>
+                <li><a href="/option2">Option 2</a></li>
+                <li><a href="/option3">Option 3</a></li>
+            </ul>
+        </aside>
+
+        <!-- Main content -->
+        <main class="main-content">
+            <div class="segments">
+                {% for segment in segments %}
+                <div class="segment" 
+                     style="background-image: url('{{ segment.background }}');"
+                     onclick="select('{{ restaurant }}','{{ segment.name }}')">
+                    <h3 class="segment-title">{{ segment.name }}</h3>
+                </div>
+                {% endfor %}
+            </div>
+        </main>
+    </div>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/ordering.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/l.js') }}"></script>
+</body>
+</html>
