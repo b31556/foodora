@@ -152,7 +152,7 @@ def dashboard():
 @app.route("/foodinfo/<rest>/<foodname>")
 def foodinfo(rest,foodname):
 
-    html=""
+    html=f"<h1>{foodname}</h1>\n<h3>Hogy szeretnéd?</h2>\n"
 
     with open(f"data/{rest}_menu.json") as f:
         data=json.load(f)
@@ -166,10 +166,10 @@ def foodinfo(rest,foodname):
 
     for option in options:
         if option["type"] == "choice":
-            radioGroup=random.randint(1000,9999)
-            html+=f"""<label class="popup-content">{option["name"]}</label>"""
+            radioGroup=option["name"]
+            html+=f"""<label class="potitle">{option["name"]}</label>"""
             for index,choice in enumerate(option["options"]):
-                html+=f"""<input class="popup-content" type="radio" id="option-{radioGroup}-{index}" name="{radioGroup}" value="{choice}">
+                html+=f"""<input type="radio" id="option-{radioGroup}-{index}" name="{radioGroup}" value="{choice}">
                 <label for="option-{radioGroup}-{index}">{choice}</label>"""
                 
 
@@ -180,7 +180,18 @@ def foodinfo(rest,foodname):
 
         html+= "\n<br>\n"
 
+    html+=f"\n<button onClick='document.getElementById(\"popup\").classList.remove(\"visible\")'>Back</button> <button onClick='selected(\"{rest}\",\"{foodname}\")'>OK</button>"
+
     return html
+
+@app.route("/placeorderpart/<resta>/<food>",methods=["POST"])
+def placeorderpart(resta,food):
+    data=request.data
+    data=json.loads(data)
+
+    return "ok"
+
+
 
 
 @app.errorhandler(500)
