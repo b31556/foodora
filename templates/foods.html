@@ -27,7 +27,7 @@
             <label>loading . . . </label>
         </div>
     
-        <div id="basket" class="popup">
+        <div id="basket" class="popup basket">
             <label>loading . . . </label>
         </div>
     
@@ -52,8 +52,11 @@
         <!-- Main content -->
 
         <main class="main-content">
-            <img class="basket-logo" src="/static/images/basket-icon.png">
-
+            <div onclick="basket('{{ restaurant }}')" class="basket-container">
+                <img id="basket-logo" class="basket-logo" src="/static/images/basket-icon.png" alt="Basket Icon">
+                <span id="basket-count" class="basket-count" id="basket-count">0</span>
+            </div>
+              
             <div class="segments">
                 {% for segment in segments %}
                 <div class="segment" 

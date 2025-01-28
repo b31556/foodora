@@ -1,3 +1,14 @@
+async function atstart(restaurant) {
+    const response = await fetch(`/getbasketcount/${restaurant}`);
+    if (response.status == 200 && !response.redirected) {
+        const data = await response.text();
+        document.getElementById('basket-count').innerHTML = data;
+    }
+}
+
+atstart(document.location.pathname.split('/')[2]);
+
+
 async function select(restaurant, thing) {
     if (!document.getElementById('popup').classList.contains('visible')){
 
@@ -69,10 +80,61 @@ async function selected(restaurant,thing) {
         document.getElementById('popup').innerHTML = data;
 
 
+        if (response.status == 200) {
+            document.getElementById("popup").classList.remove("visible")
+    basketCountElement=document.getElementById('basket-logo');
+    if (basketCountElement.style.display === 'none' || basketCountElement.style.display === '') {
+        basketCountElement.style.display = 'block';
+      }
+    basketCountElement.style.transform = 'scale(1.7)'; // Make it bigger
+    setTimeout(() => {
+      basketCountElement.style.transform = 'scale(1)'; // Reset to normal size
+    }, 400); // Duration of the pop effect in milliseconds
+
+    basketcountelem=document.getElementById('basket-count');
+    basketcountelem.innerHTML=parseInt(basketcountelem.innerHTML)+1;
+        }
+
     } catch (error) {
         console.error("Error fetching food info:", error);
         alert("Hiba történt az adatok lekérdezésekor!");
     }
 
-    document.getElementById("popup").classList.remove("visible")
+    
+  
+}
+
+
+
+
+async function basket(restaurant) {
+    document.getElementById("basket").classList.add("visible")
+    const response = await fetch(`/getbasket/${restaurant}`);
+    if (response.redirected) {
+        document.location.href = response.url;}
+    if (response.status == 200) {
+        const data = await response.text();
+        document.getElementById('basket').innerHTML = data;
+    }
+}
+
+async function resetbasket(restaurant) {
+    const response = await fetch(`/resetbasket/${restaurant}`);
+    atstart(restaurant);
+    document.getElementById("basket").classList.remove("visible")}
+
+
+async function confirmorder(restaurant) {
+    try {
+        const response = await fetch(`/confirmorder/${restaurant}`);
+        if (response.redirected) {
+            document.location.href = response.url;
+        }
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+    } catch (error) {
+        console.error("Error fetching food info:", error);
+        alert("Hiba történt!");
+    }
 }

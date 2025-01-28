@@ -133,7 +133,7 @@ def handlelogin(email, passw="", name="", googlehandled=False, pfp=""):
 def handle_existing_user(user, passw, googlehandled, redirecturl):
     if user.auth(passw) or googlehandled:
         session = sm.make(user)
-        return jsonify({"code":200, "message":"Login Sucessful", "token":session.token})
+        return create_response(session, googlehandled, redirecturl)
     else:
         return jsonify({"code":202}), 202
 
@@ -151,7 +151,7 @@ def handle_new_user(email, passw, name, googlehandled, pfp, redirecturl):
 
     user = um.make(email.split("@")[0] if name == "" else name, passw, email, pfp)
     session = sm.make(user)
-    returnn = jsonify({"code":201, "message":"Registered Sucessfully", "token":session.token})
+    
 
     return create_response(session, googlehandled, redirecturl)
 

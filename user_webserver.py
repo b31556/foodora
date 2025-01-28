@@ -189,7 +189,7 @@ def foodinfo(rest,foodname):
 
         html+= "\n<br>\n"
 
-    html+=f"\n<button onClick='document.getElementById(\"popup\").classList.remove(\"visible\")'>Back</button> <button onClick='selected(\"{rest}\",\"{foodname}\")'>OK</button>"
+    html+=f"\n<button onClick='document.getElementById(\"popup\").classList.remove(\"visible\")'>Back</button> <button onClick='selected(\"{rest}\")'>OK</button>"
 
     return html
 
@@ -223,9 +223,87 @@ def placeorderpart(resta,food):
 
     return "ok",200
 
+@app.route("/getbasketcount/<resta>")
+def getbasketcount(resta):
+    token=request.cookies.get("sessiontoken")
+    user=sm.getbytoken(token)
+    if user:
+        user=user.user
+        if user.data.get("basket"):
+            if user.data["basket"].get(resta):
+                return str(len(user.data["basket"][resta]))
+            else:
+                return "0"
+        else:
+            return "0"
+    else:
+        return "0"
+
+@app.route("/getbasket/<resta>")
+def getbasket(resta):
+    token = request.cookies.get("sessiontoken")
+    user = sm.getbytoken(token)
+    if user:
+        user = user.user
+        if user.data.get("basket"):
+            if user.data["basket"].get(resta):
+                basket = user.data["basket"][resta]
+                html = f"<h1>{resta} order:</h1>\n"
+                for item in basket:
+                    html += f"<h2>{item['item']}</h2>"
+                    for mod in item["modifications"]["choices"].keys():
+                        html += f"<a>{mod}:{item['modifications']['choices'][mod]}, </a>"
+                    for mod in item["modifications"]["extras"]:
+                        html += f"<a>{mod}, </a>"
+                    html += "<br>"    
+            
+                html += f"\n <button onClick='resetbasket(\"{resta}\")'>Restart</button> <button onClick='document.getElementById(\"basket\").classList.remove(\"visible\")'>Back</button> <button onClick=\"confirmorder(\'{resta}\')\">Confirm</button>"
+                return html
+            else:
+                return "empty basket <button onClick='document.getElementById(\"basket\").classList.remove(\"visible\")'>Back</button>"
+        else:
+            return "empty basket <button onClick='document.getElementById(\"basket\").classList.remove(\"visible\")'>Back</button>"
+    else:
+        return flask.redirect("/login?redirect=/restaurant/"+resta)
 
 
+@app.route("/resetbasket/<resta>")
+def resetbasket(resta):
+    token = request.cookies.get("sessiontoken")
+    user = sm.getbytoken(token)
+    if user:
+        user = user.user
+        if user.data.get("basket"):
+            if user.data["basket"].get(resta):
+                del user.data["basket"][resta]
+                user.save()
+                return "basket reset"
+            else:
+                return "empty basket",400
+        else:
+            return "empty basket",400
+    else:
+        return flask.redirect("/login?redirect=/restaurant/"+resta)
 
+
+@app.route("/confirmorder/<resta>")
+def confirmorder(resta):
+    token = request.cookies.get("sessiontoken")
+    user = sm.getbytoken(token)
+    if user:
+        user = user.user
+        if user.data.get("basket"):
+            if user.data["basket"].get(resta):
+                user.data["selectedrestaurant"]=resta
+                user.save()
+                return flask.redirect("/order")
+            else:
+                return "you have nothing in you basket",400
+        else:
+            return "you have nothing in you basket",400
+    else:
+        return flask.redirect("/login?redirect=/restaurant/"+resta)
+            
 
 
 @app.errorhandler(500)
