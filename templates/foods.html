@@ -22,50 +22,13 @@
         </div>
     </div>
         <!-- Popup Window -->
+        
         <div id="popup" class="popup">
-            <div class="popup-content">
-                <span class="close-btn" onclick="document.getElementById('popup').classList.toggle('visible')">&times;</span>
-                <h2>Input Elements Demo</h2>
-
-                <label for="text">Text Input:</label>
-                <input type="text" id="text" placeholder="Enter text">
-            
-                <label for="email">Email Input:</label>
-                <input type="email" id="email" placeholder="Enter email">
-            
-                <label for="password">Password Input:</label>
-                <input type="password" id="password" placeholder="Enter password">
-            
-                <label>Radio Buttons:</label>
-                <input type="radio" id="option1" name="radioGroup" value="option1">
-                <label for="option1">Option 1</label>
-                <input type="radio" id="option2" name="radioGroup" value="option2">
-                <label for="option2">Option 2</label>
-            
-                <label>Checkboxes:</label>
-                <input type="checkbox" id="check1">
-                <label for="check1">Check me</label>
-                <input type="checkbox" id="check2">
-                <label for="check2">Check me too</label>
-            
-                <label for="select">Dropdown:</label>
-                <select id="select">
-                    <option value="">Choose an option</option>
-                    <option value="1">First Option</option>
-                    <option value="2">Second Option</option>
-                </select>
-            
-                <label for="range">Range Slider:</label>
-                <input type="range" id="range" min="0" max="100">
-            
-                <label for="date">Date Picker:</label>
-                <input type="date" id="date">
-            
-                <label for="file">File Upload:</label>
-                <input type="file" id="file">
-            
-                <button type="submit">Submit</button>
-            </div>
+            <label>loading . . . </label>
+        </div>
+    
+        <div id="basket" class="popup">
+            <label>loading . . . </label>
         </div>
     
 
@@ -87,7 +50,10 @@
         </aside>
 
         <!-- Main content -->
+
         <main class="main-content">
+            <img class="basket-logo" src="/static/images/basket-icon.png">
+
             <div class="segments">
                 {% for segment in segments %}
                 <div class="segment" 

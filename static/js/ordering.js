@@ -6,18 +6,23 @@ async function select(restaurant, thing) {
         try {
             const response = await fetch(`/foodinfo/${restaurant}/${thing}`);
             
+            if (response.status == 304) {
+                tologin()
+            }
+
+
             if (!response.status == 200) {
                 throw new Error(`HTTP error! Status: ${response.status}`);
             }
             
             const data = await response.text();
             
+
             document.getElementById('popup').innerHTML = data
         } catch (error) {
             console.error("Error fetching food info:", error);
             alert("Hiba történt az adatok lekérdezésekor!");
         }
-
     }
 }
 
@@ -62,8 +67,12 @@ async function selected(restaurant,thing) {
 
         const data = await response.text();
         document.getElementById('popup').innerHTML = data;
+
+
     } catch (error) {
         console.error("Error fetching food info:", error);
         alert("Hiba történt az adatok lekérdezésekor!");
     }
+
+    document.getElementById("popup").classList.remove("visible")
 }

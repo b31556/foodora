@@ -56,3 +56,25 @@ def write_database(table="", **values: dict[str,str]):
         conn.close()
     except Exception as e:
         print(f"Error: {e}")
+
+def set_row(table, col, search, **values: dict[str,str]):
+    
+    
+    try:
+        conn = mysql.connector.connect(**database_config)
+        cursor = conn.cursor()
+
+        # Generate the update query
+        update_query = f"UPDATE {table} SET {', '.join([f'{key} = %s' for key in values.keys()])} WHERE {col} = {search}"
+
+        # Debugging: Print the query and values
+        print(update_query, tuple(values.values()))
+
+        # Execute the update query
+        cursor.execute(update_query, tuple(values.values()))
+
+        # Commit the changes and close the connection
+        conn.commit()
+        conn.close()
+    except Exception as e:
+        print(f"Error: {e}")

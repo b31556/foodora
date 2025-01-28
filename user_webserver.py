@@ -151,6 +151,15 @@ def dashboard():
 
 @app.route("/foodinfo/<rest>/<foodname>")
 def foodinfo(rest,foodname):
+    token=request.cookies.get("sessiontoken")
+    user=sm.getbytoken(token)
+    if not user:
+        return "redirect to login",304
+        
+    if not user.user:
+        return "please login agin",304
+
+
 
     html=f"<h1>{foodname}</h1>\n<h3>Hogy szeretnéd?</h2>\n"
 
@@ -186,10 +195,35 @@ def foodinfo(rest,foodname):
 
 @app.route("/placeorderpart/<resta>/<food>",methods=["POST"])
 def placeorderpart(resta,food):
+
+    token=request.cookies.get("sessiontoken")
+
+    user=sm.getbytoken(token)
+
+    if not user:
+        return "redirect to login",304
+        
+    if not user.user:
+        return "please login agin",304
+    user=user.user
+
+
     data=request.data
     data=json.loads(data)
 
-    return "ok"
+    if user.data.get("basket"):
+        if user.data["basket"].get(resta):
+            user.data["basket"][resta].append({"item":food,"modifications":data})
+        else:
+            user.data["basket"][resta]= [{"item":food,"modifications":data}]
+    else:
+        user.data["basket"]={resta:[{"item":food,"modifications":data}]}
+
+    user.save()  # important to save after any changes (this writes back to the db) else the chanching is only in cashe
+
+    return "ok",200
+
+
 
 
 
@@ -206,7 +240,7 @@ def notfound(e):
 
       
 def main():    
-    app.run(debug=True,host='0.0.0.0',port=8945)
+    app.run(debug=True,host='0.0.0.0',port=8945,use_reloader=False)
 
 if __name__=="__main__":
     main()

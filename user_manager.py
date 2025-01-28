@@ -22,6 +22,11 @@ class User:
 
     def auth(self,passw):
         return self.passw==passw
+    
+
+    def save(self):
+        database.set_row(table="auth",col="id",search=self.id,name=self.name,email=self.email,pfp=self.profilepicture,id=self.id,passw=self.passw,createdat=round(self.createdat),data=json.dumps(self.data),token=self.token)
+
 
 def make(name,passw, email, profilepic=""):
     user = User(name, passw, email, profilepicture=profilepic)
@@ -62,6 +67,11 @@ def getbytoken(token):
 def unload_user(id):
     if id in logged_in_users:
         del logged_in_users[id]
+
+
+def save_all():
+    for urs in logged_in_users:
+        urs.save()
     
 
     
