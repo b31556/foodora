@@ -108,38 +108,63 @@ def login():
 
 
 
-def handlelogin(email,passw="",name="",googlehandled=False,pfp=""):
-    user=um.getbyemail(email)
-    redirecturl=request.cookies.get("redirect")
-    if user:
-        if user.auth(passw) or googlehandled:
-            session=sm.make(user)
-            returnn = jsonify({"code":200,"message":"Login Sucessful","token":session.token})
-        else:
-            return jsonify({"code":202}), 202
-    else:
-        try:
-            a,b=email.split("@")
-            if a=="" or b=="":
-                raise Exception
-            if passw=="":
-                raise Exception
-        except:
-            if not googlehandled:
-                return jsonify({"code":202}), 202
+def handlelogin(email, passw="", name="", googlehandled=False, pfp=""):
+    """
+    Handle user login or registration.
 
-        user=um.make(email.split("@")[0] if name=="" else name,passw,email,pfp)
-        session=sm.make(user)
-        returnn = jsonify({"code":201,"message":"Registered Sucessfully","token":session.token})
-    
+    Parameters:
+    email (str): The user's email address.
+    passw (str): The user's password.
+    name (str): The user's name.
+    googlehandled (bool): Whether the login is handled by Google (skips password auth).
+    pfp (str): The user's profile picture URL.
+
+    Returns:
+    Response: A Flask response object with the login result.
+    """
+    user = um.getbyemail(email)
+    redirecturl = request.cookies.get("redirect")
+    if user:
+        return handle_existing_user(user, passw, googlehandled, redirecturl)
+    else:
+        return handle_new_user(email, passw, name, googlehandled, pfp, redirecturl)
+
+
+def handle_existing_user(user, passw, googlehandled, redirecturl):
+    if user.auth(passw) or googlehandled:
+        session = sm.make(user)
+        return jsonify({"code":200, "message":"Login Sucessful", "token":session.token})
+    else:
+        return jsonify({"code":202}), 202
+
+
+def handle_new_user(email, passw, name, googlehandled, pfp, redirecturl):
+    try:
+        a, b = email.split("@")
+        if a == "" or b == "":
+            raise Exception
+        if passw == "":
+            raise Exception
+    except:
+        if not googlehandled:
+            return jsonify({"code":202}), 202
+
+    user = um.make(email.split("@")[0] if name == "" else name, passw, email, pfp)
+    session = sm.make(user)
+    returnn = jsonify({"code":201, "message":"Registered Sucessfully", "token":session.token})
+
+    return create_response(session, googlehandled, redirecturl)
+
+
+def create_response(session, googlehandled, redirecturl):
     resp = make_response(jsonify({"code":202}) if not googlehandled else (redirect("/") if not redirecturl else redirect(redirecturl)), 302 if googlehandled else 202)
     
     # Set a custom session cookie
     resp.set_cookie(
         key='sessiontoken',                # Cookie name
-        value=session.token,        # Cookie value
+        value=session.token,               # Cookie value
         httponly=True,                     # Prevent JavaScript access
-        secure=False,                       # Only send over HTTPS #! MAKE THIS TRUE FOR PRODUCTION!
+        secure=False, # Only send over HTTPS #! MAKE THIS TRUE FOR PRODUCTION!
         samesite='Lax'                     # Prevent CSRF attacks
     )
     if redirecturl:
