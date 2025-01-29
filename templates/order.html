@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pincer | Restaurants</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <div class="top-bar">
+        <a href="/" class="logo">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo">
+        </a>
+        <div class="menu">
+            <a href="/">Home</a>
+            <a href="/about">About us</a>
+            <a href="/contact">Contact</a>
+            <a href="/join">Join us</a>
+        </div>
+    </div>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="profile-picture">
+                <a onclick="tologin()">
+                    <img src="{{ pfpurl }}" alt="Profile Picture">
+                </a>
+            </div>
+            <ul class="sidebar-options">
+                <li><a href="/option1">Option 1</a></li>
+                <li><a href="/option2">Option 2</a></li>
+                <li><a href="/option3">Option 3</a></li>
+            </ul>
+        </aside>
+        <div class="mydiv">
+            <h1 class="myh1">Order from {{ restaurant }}</h1>
+            <a>{{ price }}Ft</a>
+            <br>
+            <a id="lastconfirm">
+                {{ basket }}
+            </a>
+
+    <style>
+        #map {
+            height: 400px;
+            width: 100%;
+        }
+        .controls {
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+        .coordinates {
+            margin-top: 10px;
+            font-family: Arial, sans-serif;
+        }
+        #search {
+            width: 300px;
+            padding: 8px;
+        }
+        #suggestions {
+            border: 1px solid #ccc;
+            max-height: 150px;
+            overflow-y: auto;
+            width: 300px;
+            margin-top: 5px;
+            display: none;
+        }
+        .suggestion-item {
+            padding: 8px;
+            cursor: pointer;
+        }
+        .suggestion-item:hover {
+            background-color: #f0f0f0;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@v7.3.0/ol.css">
+    <script src="https://cdn.jsdelivr.net/npm/ol@v7.3.0/dist/ol.js"></script>
+
+    <h1>Select Your Location</h1>
+    <div class="controls">
+        <input type="text" id="search" placeholder="Search for a location...">
+        <input type="text" id="hn" placeholder="house number">
+        <div id="suggestions"></div>
+    </div>
+    
+    <div id="map"></div>
+    
+
+    <script>
+        // Initialize the map
+        const map = new ol.Map({
+            target: 'map',
+            layers: [
+                new ol.layer.Tile({
+                    source: new ol.source.OSM() // OpenStreetMap as the base layer
+                })
+            ],
+            view: new ol.View({
+                center: ol.proj.fromLonLat([0, 0]), // Default center (longitude, latitude)
+                zoom: 2 // Default zoom level
+            })
+        });
+
+        // Add a marker for the selected location
+        const marker = new ol.Feature();
+        const markerSource = new ol.source.Vector({
+            features: [marker]
+        });
+        const markerLayer = new ol.layer.Vector({
+            source: markerSource
+        });
+        map.addLayer(markerLayer);
+
+        // Add a click event to the map to select a location
+        map.on('click', function (event) {
+            const coordinates = ol.proj.toLonLat(event.coordinate);
+            marker.setGeometry(new ol.geom.Point(event.coordinate));
+            document.getElementById('coordinates').innerText = `${coordinates[0].toFixed(4)}, ${coordinates[1].toFixed(4)}`;
+        });
+
+        // Function to fetch location suggestions from OpenStreetMap Nominatim
+        function fetchSuggestions(query) {
+            if (!query) {
+                document.getElementById('suggestions').style.display = 'none';
+                return;
+            }
+
+            fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&addressdetails=1`)
+                .then(response => response.json())
+                .then(data => {
+                    const suggestions = document.getElementById('suggestions');
+                    suggestions.innerHTML = ''; // Clear previous suggestions
+
+                    if (data.length > 0) {
+                        data.forEach(result => {
+                            const displayName = result.display_name;
+                            const item = document.createElement('div');
+                            item.className = 'suggestion-item';
+                            item.textContent = displayName;
+                            item.addEventListener('click', () => {
+                                const lon = parseFloat(result.lon);
+                                const lat = parseFloat(result.lat);
+                                const coordinates = ol.proj.fromLonLat([lon, lat]);
+
+                                // Set the map view to the selected location
+                                map.getView().setCenter(coordinates);
+                                map.getView().setZoom(16); // Zoom in for better detail
+
+                                // Update the marker and coordinates display
+                                marker.setGeometry(new ol.geom.Point(coordinates));
+                                //document.getElementById('coordinates').innerText = `${lon.toFixed(4)}, ${lat.toFixed(4)}`;
+                                document.getElementById('search').value = displayName;
+                                suggestions.style.display = 'none';
+                            });
+                            suggestions.appendChild(item);
+                        });
+                        suggestions.style.display = 'block';
+                    } else {
+                        suggestions.style.display = 'none';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching suggestions:', error);
+                });
+        }
+
+        // Add an input event listener to the search box
+        document.getElementById('search').addEventListener('input', function (event) {
+            fetchSuggestions(event.target.value);
+        });
+
+        // Hide suggestions when clicking outside the search box
+        document.addEventListener('click', function (event) {
+            if (event.target.id !== 'search') {
+                document.getElementById('suggestions').style.display = 'none';
+            }
+        });
+    </script>
+        <button class="confirmbutton" onclick="confirmlocation()">I selected my location</button>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='js/confirm.js') }}"></script>
+
+</body>
+</html>

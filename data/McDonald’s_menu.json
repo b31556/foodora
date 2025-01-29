@@ -7,7 +7,7 @@
         {"type":"choice","name":"Salt","options":["no","normal","extra"]},
         {"type":"checkbox","name":"salt"},
         {"type":"checkbox","name":"salt"}
-    ]},
+    ],"price":960},
 
     {"name":"Sajtburger","background":"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR9LZJ2COPCynjZ5cliozcCq0_nBGuFJHHdXw&s"},
     {"name":"Sajtburger","background":"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR9LZJ2COPCynjZ5cliozcCq0_nBGuFJHHdXw&s"},

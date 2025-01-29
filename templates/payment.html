@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Payment Page Example</title>
+  <link rel="stylesheet" href="/static/css/payment.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Payment Page</h1>
+    <p>You should be now redirected to the payment page.</p>
+    <p>BUT this is a development site with no real payment logic implemented yet.</p>
+    <p>Please go to the <code>/templates/payment.html</code> file to implement a payment!</p>
+    <p>For now, you can click the button below to simulate a payment.</p>
+    <h2>Total: {{ price }} HUF</h2>
+    <button onclick="dopayment()" class="pay-btn">PAY</button>
+  </div>
+  <script src="{{ url_for('static', filename='js/payment.js') }}"></script>
+</body>
+</html>

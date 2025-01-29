@@ -160,8 +160,8 @@ def foodinfo(rest,foodname):
         return "please login agin",304
 
 
-
-    html=f"<h1>{foodname}</h1>\n<h3>Hogy szeretnéd?</h2>\n"
+    price=get_price(foodname,rest)
+    html=f"<h1>{foodname}</h1>\n<a>{price}Ft</a><br>\n<h3>Hogy szeretnéd?</h2>\n"
 
     with open(f"data/{rest}_menu.json") as f:
         data=json.load(f)
@@ -189,7 +189,7 @@ def foodinfo(rest,foodname):
 
         html+= "\n<br>\n"
 
-    html+=f"\n<button onClick='document.getElementById(\"popup\").classList.remove(\"visible\")'>Back</button> <button onClick='selected(\"{rest}\")'>OK</button>"
+    html+=f"\n<button onClick='document.getElementById(\"popup\").classList.remove(\"visible\")'>Back</button> <button onClick='selected(\"{rest}\",\"{foodname}\")'>OK</button>"
 
     return html
 
@@ -248,9 +248,10 @@ def getbasket(resta):
         if user.data.get("basket"):
             if user.data["basket"].get(resta):
                 basket = user.data["basket"][resta]
-                html = f"<h1>{resta} order:</h1>\n"
+                price=cacl_price(user.data["basket"],resta)
+                html = f"<h1>{resta} order:</h1>\n<a>{price}Ft</a>"
                 for item in basket:
-                    html += f"<h2>{item['item']}</h2>"
+                    html += f"<h2>{item['item']}  ({get_price(item["item"],resta)}Ft)</h2>"
                     for mod in item["modifications"]["choices"].keys():
                         html += f"<a>{mod}:{item['modifications']['choices'][mod]}, </a>"
                     for mod in item["modifications"]["extras"]:
@@ -304,6 +305,113 @@ def confirmorder(resta):
     else:
         return flask.redirect("/login?redirect=/restaurant/"+resta)
             
+
+@app.route("/order")
+def order():
+
+    token = request.cookies.get("sessiontoken")
+    user = sm.getbytoken(token)
+    if user:
+        user = user.user
+        if user.data.get("selectedrestaurant"):
+            price=cacl_price(user.data["basket"],user.data["selectedrestaurant"])
+            html=""
+            for food in user.data["basket"][user.data["selectedrestaurant"]]:
+                pr=get_price(food["item"],user.data["selectedrestaurant"])
+                html+=food["item"]+" ("+str(pr)+"Ft);        "
+            return flask.render_template("order.html",basket=html,price=price,restaurant=user.data["selectedrestaurant"],pfpurl=user.profilepicture)
+        else:
+            return flask.redirect("/restaurants")
+    else:
+        return flask.redirect("/login?redirect=/order")
+
+
+def cacl_price(basket,restaurant):
+    price=0
+    for order in basket[restaurant]:
+        with open(f"data/{restaurant}_menu.json") as f:
+            data=json.load(f)
+        foodlist={}
+        for item in data:
+            foodlist[item["name"]] = item
+        price+=foodlist[order["item"]]["price"]
+    return price
+
+def get_price(item_name,restaurant):
+    with open(f"data/{restaurant}_menu.json") as f:
+        data=json.load(f)
+    foodlist={}
+    for item in data:
+        foodlist[item["name"]] = item
+    return foodlist[item_name]["price"]
+
+
+@app.route("/confirmlocation",methods=["POST"])
+def confirmlocation():
+    token = request.cookies.get("sessiontoken")
+    user = sm.getbytoken(token)
+    if user:
+        user = user.user
+        data=json.loads(request.data)
+        location=data.get("search")
+        hn = data.get("hn")
+        user.data["location"]={"location":location,"hn":hn}
+        user.save()
+        return "ok",200
+    else:
+        return flask.redirect("/login?redirect=/order")
+
+@app.route("/payment")
+def payment():
+    token = request.cookies.get("sessiontoken")
+    user = sm.getbytoken(token)
+    if user:
+        user = user.user
+        if user.data.get("location"):
+            price=cacl_price(user.data["basket"],user.data["selectedrestaurant"])
+            return flask.render_template("payment.html",price=price,pfpurl=user.profilepicture)
+        else:
+            return flask.redirect("/order")
+    else:
+        return flask.redirect("/login?redirect=/order")
+    
+
+@app.route("/dopayment",methods=["POST"])
+def dopayment():
+    token = request.cookies.get("sessiontoken")
+    user = sm.getbytoken(token)
+    if user:
+        user = user.user
+        if user.data.get("location"):
+
+            #TODO HERE TO IMPLAMENT THE ORDER!!
+            user.data["order"] = {"status":"ordered","time":time.time(),"location":user.data["location"],"basket":user.data["basket"][user.data["selectedrestaurant"]],"restaurant":user.data["selectedrestaurant"],"price":cacl_price(user.data["basket"],user.data["selectedrestaurant"])}
+
+
+            del user.data["basket"][user.data["selectedrestaurant"]]
+            del user.data["selectedrestaurant"]
+            user.save()
+
+            return "ok",200
+           
+        else:
+            return "missing data",400
+    else:
+        return flask.redirect("/login?redirect=/order")
+
+
+@app.route("/track-order")
+def trackorder():
+    token = request.cookies.get("sessiontoken")
+    user = sm.getbytoken(token)
+    if user:
+        user = user.user
+        if user.data.get("order"):
+            return jsonify(user.data["order"])
+        else:
+            return "no order",400
+    else:
+        return flask.redirect("/login?redirect=/order")
 
 
 @app.errorhandler(500)

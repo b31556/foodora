@@ -299,3 +299,33 @@ body {
 .popup.visible .popup-content {
     animation: popup-animation 0.5s ease-out;
 }
+
+
+
+.mydiv {
+    top: 300px;
+    transform: translateY(-50%);
+    text-align: center;
+    right: 90px;
+    transform: translateX(25%);
+    height: 90%;
+    width: 80%;
+}
+
+.myh1 {
+    font-size: 50px;
+    color: rgb(255, 255, 255);
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
+}
+
+.confirmbutton {
+    background-color: rgb(255, 94, 0);
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 20px;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: background-color 0.3s;
+}
