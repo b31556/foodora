@@ -13,6 +13,7 @@ import auth
 
 import sessions_manager as sm
 import user_manager as um
+import order_manager as om
 
 app = Flask("user_webserver")
 app.secret_key = os.urandom(24)
@@ -385,8 +386,8 @@ def dopayment():
         if user.data.get("location"):
 
             #TODO HERE TO IMPLAMENT THE ORDER!!
-            user.data["order"] = {"status":"ordered","time":time.time(),"location":user.data["location"],"basket":user.data["basket"][user.data["selectedrestaurant"]],"restaurant":user.data["selectedrestaurant"],"price":cacl_price(user.data["basket"],user.data["selectedrestaurant"])}
-
+            #user.data["order"] = {"status":"ordered","time":time.time(),"location":user.data["location"],"basket":user.data["basket"][user.data["selectedrestaurant"]],"restaurant":user.data["selectedrestaurant"],"price":cacl_price(user.data["basket"],user.data["selectedrestaurant"])}
+            om.make_oreder(user.id,user.data["basket"][user.data["selectedrestaurant"]],user.data["selectedrestaurant"],user.data["location"]["location"],cacl_price(user.data["basket"],user.data["selectedrestaurant"]))
 
             del user.data["basket"][user.data["selectedrestaurant"]]
             del user.data["selectedrestaurant"]
@@ -406,12 +407,14 @@ def trackorder():
     user = sm.getbytoken(token)
     if user:
         user = user.user
-        if user.data.get("order"):
-            return jsonify(user.data["order"])
-        else:
-            return "no order",400
+        orders=om.get_orders(user.id)
+        ret=[]
+        for order in orders:
+            ret.append(order.json())
+        
+        return jsonify(ret)
     else:
-        return flask.redirect("/login?redirect=/order")
+        return flask.redirect("/login?redirect=/track-order")
 
 
 @app.errorhandler(500)

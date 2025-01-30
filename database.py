@@ -42,9 +42,7 @@ def read_database(table, col, search):
         return None
 
 def write_database(table="", **values: dict[str,str]):
-    if injectiondetection(values):
-        print("INJECTION DETECTED WRITING FALIED in "+values)
-        return None
+    
     try:
         conn = mysql.connector.connect(**database_config)
         cursor = conn.cursor()

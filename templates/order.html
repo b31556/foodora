@@ -79,6 +79,7 @@
     <h1>Select Your Location</h1>
     <div class="controls">
         <input type="text" id="search" placeholder="Search for a location...">
+        <button onclick="fetchSuggestions(document.getElementById('search').value)">Search</button>
         <input type="text" id="hn" placeholder="house number">
         <div id="suggestions"></div>
     </div>
@@ -165,9 +166,7 @@
         }
 
         // Add an input event listener to the search box
-        document.getElementById('search').addEventListener('input', function (event) {
-            fetchSuggestions(event.target.value);
-        });
+        
 
         // Hide suggestions when clicking outside the search box
         document.addEventListener('click', function (event) {
