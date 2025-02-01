@@ -15,12 +15,12 @@ import sessions_manager as sm
 import user_manager as um
 import order_manager as om
 
-app = Flask("user_webserver")
+app = flask.Blueprint('user_webserver', __name__)
 app.secret_key = os.urandom(24)
 
 app.register_blueprint(auth.app)
 
-limiter=flask_limiter.Limiter(auth.get_client_ip,app=app)
+limiter=None
 
 auth.limiter=limiter
 
@@ -385,9 +385,10 @@ def dopayment():
         user = user.user
         if user.data.get("location"):
 
-            #TODO HERE TO IMPLAMENT THE ORDER!!
+            
             #user.data["order"] = {"status":"ordered","time":time.time(),"location":user.data["location"],"basket":user.data["basket"][user.data["selectedrestaurant"]],"restaurant":user.data["selectedrestaurant"],"price":cacl_price(user.data["basket"],user.data["selectedrestaurant"])}
-            om.make_oreder(user.id,user.data["basket"][user.data["selectedrestaurant"]],user.data["selectedrestaurant"],user.data["location"]["location"],cacl_price(user.data["basket"],user.data["selectedrestaurant"]))
+            order=om.make_oreder(user.id,user.data["basket"][user.data["selectedrestaurant"]],user.data["selectedrestaurant"],user.data["location"],cacl_price(user.data["basket"],user.data["selectedrestaurant"]))
+            order.fulfill()
 
             del user.data["basket"][user.data["selectedrestaurant"]]
             del user.data["selectedrestaurant"]
@@ -426,10 +427,3 @@ def notfound(e):
     an = flask.make_response(flask.redirect("/"))
     an.set_cookie("notfound", "yes")
     return an
-
-      
-def main():    
-    app.run(debug=True,host='0.0.0.0',port=8945,use_reloader=False)
-
-if __name__=="__main__":
-    main()

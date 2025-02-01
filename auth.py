@@ -8,19 +8,14 @@ from database import read_database, write_database
 import sessions_manager as sm
 import user_manager as um
 
+from essentials import get_client_ip
+
 app = Blueprint('auth', __name__, url_prefix='/auth')
 
 CLIENT_ID = '541304192962-2c2uqhq1i5c3p0g64qqcvssoakbibon1.apps.googleusercontent.com'   ## GOOGLE CLOUD CREDENTIALS
 CLIENT_SECRET = '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'
 
-def get_client_ip():
-    forwarded_for = request.headers.get("X-Forwarded-For", None)
-    if forwarded_for:
-        # Ha több IP van, az első a kliens IP
-        print(forwarded_for.split(",")[0].strip())
-        return forwarded_for.split(",")[0].strip()
-    print(request.remote_addr)
-    return request.remote_addr
+
 
 
 limiter=None
@@ -29,22 +24,27 @@ REDIRECT_URI = 'http://nationscity.eu:8945/auth/callback'
 
 
 
-@app.route("/api/login")
+""" @app.route("/api/login")
 def apilogin():
-    email=request.args.get("email")
-    password=request.args.get("pass")
-    if email and password:
-        user=um.getbyemail(email)
-        if user:
-            if user.passw==password:
-                return jsonify({"code":200,"token":sm.make(user).token})
+    try:
+        with limiter.limit("5/minute"):
+            email=request.args.get("email")
+            password=request.args.get("pass")
+            if email and password:
+                user=um.getbyemail(email)
+                if user:
+                    if user.passw==password:
+                        return jsonify({"code":200,"token":sm.make(user).token})
+                    else:
+                        return jsonify({"code":401,"message":"Invalid email or password"}), 401
+                else:
+                    return jsonify({"code":401,"message":"Not existing user"}), 401
             else:
-                return jsonify({"code":401,"message":"Invalid email or password"}), 401
-        else:
-            return jsonify({"code":401,"message":"Not existing user"}), 401
-    else:
-        return jsonify({"code":400,"message":"Missing email or password arg"}), 400
-@app.route("/api/gettoken")
+                return jsonify({"code":400,"message":"Missing email or password arg"}), 400
+    except RateLimitExceeded as e:
+        return jsonify({"message": f"Too many requests! slow down; only {e.description} is allowed, (you can still use login by google)"}), 401
+"""
+""" @app.route("/api/gettoken")
 def gettoken():
     email=request.args.get("email")
     password=request.args.get("pass")
@@ -58,8 +58,8 @@ def gettoken():
         else:
             return jsonify({"code":401,"message":"Not existing user"}), 401
     else:
-        return jsonify({"code":400,"message":"Missing email or password arg"}), 400
-@app.route("/api/loginbytoken")
+        return jsonify({"code":400,"message":"Missing email or password arg"}), 400 """
+""" @app.route("/api/loginbytoken")
 def loginbytokenapi():
     token=request.args.get("token")
     if token:
@@ -69,7 +69,7 @@ def loginbytokenapi():
         else:
             return jsonify({"code":401,"message":"Invalid token"}), 401
     else:
-        return jsonify({"code":400,"message":"Missing token arg"}), 400
+        return jsonify({"code":400,"message":"Missing token arg"}), 400 """
 
 
 @app.route('/loginbygoogle')
