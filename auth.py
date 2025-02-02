@@ -8,7 +8,6 @@ from database import read_database, write_database
 import sessions_manager as sm
 import user_manager as um
 
-from essentials import get_client_ip
 
 app = Blueprint('auth', __name__, url_prefix='/auth')
 
@@ -16,6 +15,14 @@ CLIENT_ID = '541304192962-2c2uqhq1i5c3p0g64qqcvssoakbibon1.apps.googleuserconten
 CLIENT_SECRET = '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'
 
 
+def get_client_ip():
+    forwarded_for = request.headers.get("X-Forwarded-For", None)
+    if forwarded_for:
+        # Ha több IP van, az első a kliens IP
+        print(forwarded_for.split(",")[0].strip())
+        return forwarded_for.split(",")[0].strip()
+    print(request.remote_addr)
+    return request.remote_addr
 
 
 limiter=None
@@ -148,6 +155,10 @@ def handle_new_user(email, passw, name, googlehandled, pfp, redirecturl):
     except:
         if not googlehandled:
             return jsonify({"code":202}), 202
+
+    if pfp=="": # If no profile picture is provided, get a random one
+        re=requests.get("https://picsum.photos/200")
+        pfp=re.url
 
     user = um.make(email.split("@")[0] if name == "" else name, passw, email, pfp)
     session = sm.make(user)

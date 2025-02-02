@@ -22,7 +22,6 @@ app.register_blueprint(auth.app)
 
 limiter=None
 
-auth.limiter=limiter
 
 GUEST_ICON = "https://tse3.mm.bing.net/th?id=OIP.qcjhP7DA8HG_kIRvZDoDvQHaHa&pid=Api&P=0&h=220"
 
@@ -413,7 +412,7 @@ def trackorder():
         for order in orders:
             ret.append(order.json())
         
-        return jsonify(ret)
+        return flask.render_template("track-order.html",segments=ret,pfpurl=user.profilepicture)
     else:
         return flask.redirect("/login?redirect=/track-order")
 

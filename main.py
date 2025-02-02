@@ -1,7 +1,8 @@
 from flask import Flask
 import flask_limiter
 import os
-from auth import get_client_ip
+
+import auth
 
 
 import user_webserver
@@ -14,9 +15,10 @@ import delivery_manager as dm
 
 app = Flask("pincer")
 app.secret_key = os.urandom(24)
-limiter=flask_limiter.Limiter(get_client_ip,app=app)
+limiter=flask_limiter.Limiter(auth.get_client_ip,app=app)
 
 user_webserver.limiter=limiter
+auth.limiter=limiter
 
 app.register_blueprint(user_webserver.app)
 app.register_blueprint(delivery_webserver.app)

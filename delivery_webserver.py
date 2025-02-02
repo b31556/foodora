@@ -6,7 +6,7 @@ import time
 import json
 from database import read_database, write_database
 
-from essentials import is_coordinates_in_hungary, get_country_code_by_ip
+from essentials import is_coordinates_in_hungary, get_country_code_by_ip, get_route
 
 def get_client_ip():
     forwarded_for = request.headers.get("X-Forwarded-For", None)
@@ -113,7 +113,11 @@ def test():
                     user.online = True
                 elif command == "offline":
                     user.online = False
-            return jsonify({"online":"Várakozás a feladat kiosztására" if user.online and user.inprogress_order == "" else "Nem vagy elérhető" if user.inprogress_order == "" else f"Deliverying from a {om.get(user.inprogress_order).restaurant}"}),210
+
+            route=get_route(user.position["lat"],user.position["long"],user.destination["lat"],user.destination["long"])
+            jsons= json.dumps({"route":route,"destination":{"lat":user.destination["lat"], "long":user.destination["long"]},"online":"Várakozás a feladat kiosztására" if user.online and user.inprogress_order == "" else "Nem vagy elérhető" if user.inprogress_order == "" else f"Deliverying from a {om.get(user.inprogress_order).restaurant}"}),210
+            
+            return json.dumps({"route":route,"destination":{"lat":user.destination["lat"], "long":user.destination["long"]},"online":"Várakozás a feladat kiosztására" if user.online and user.inprogress_order == "" else "Nem vagy elérhető" if user.inprogress_order == "" else f"Deliverying from a {om.get(user.inprogress_order).restaurant}"}),210
         else:
             return "Invalid token", 401
     else:

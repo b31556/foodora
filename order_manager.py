@@ -79,7 +79,6 @@ def get_orders(user_id):
     read_orders = database.read_database(table="orders", col="user", search=user_id)
     for order in read_orders:
         if order[0] not in loaded_orders:
-            if order[6] == "ordered":
-                loaded_orders[order[0]] = Order(order[1], json.loads(order[2]), order[3], json.loads(order[4]), order[5], order[6], order[0], order[7], "", order[8] if order[8] != 0 else "")
+            loaded_orders[order[0]] = Order(order[1], json.loads(order[2]), order[3], json.loads(order[4]), order[5], order[6], order[0], order[7], "", order[8] if order[8] != 0 else "")
             orders.append(loaded_orders[order[0]])
     return orders
