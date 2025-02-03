@@ -115,8 +115,7 @@ def test():
                     user.online = False
 
             route=get_route(user.position["lat"],user.position["long"],user.destination["lat"],user.destination["long"])
-            jsons= json.dumps({"route":route,"destination":{"lat":user.destination["lat"], "long":user.destination["long"]},"online":"Várakozás a feladat kiosztására" if user.online and user.inprogress_order == "" else "Nem vagy elérhető" if user.inprogress_order == "" else f"Deliverying from a {om.get(user.inprogress_order).restaurant}"}),210
-            
+            print(f"sent a query with {user.position['lat']},{user.position['long']} and {user.destination['lat']},{user.destination['long']}")
             return json.dumps({"route":route,"destination":{"lat":user.destination["lat"], "long":user.destination["long"]},"online":"Várakozás a feladat kiosztására" if user.online and user.inprogress_order == "" else "Nem vagy elérhető" if user.inprogress_order == "" else f"Deliverying from a {om.get(user.inprogress_order).restaurant}"}),210
         else:
             return "Invalid token", 401
