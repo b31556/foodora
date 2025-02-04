@@ -1,6 +1,7 @@
-from flask import Flask
+from flask import Flask, request
 import flask_limiter
 import os
+import time
 
 import auth
 
@@ -11,6 +12,7 @@ import delivery_webserver
 
 import user_manager as um
 import delivery_manager as dm
+import order_manager as om
 
 
 app = Flask("pincer")
@@ -25,9 +27,16 @@ app.register_blueprint(delivery_webserver.app)
 
 @app.route("/reload")
 def reload():
-    um.logged_in_users={}
-    dm.logged_in_users={}
-    return "cache deleted"
+
+    token=request.args.get("t")
+    if token!="secret69":
+        return "not implamented yet", 501
+
+    starttime=time.time()
+    um.force_reload()
+    dm.force_reload()
+    om.force_reload()
+    return "fecthed data from database, took "+str(round(time.time()-starttime,5))+" seconds"
 
 
 def main():    

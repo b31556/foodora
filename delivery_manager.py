@@ -77,7 +77,14 @@ def save_all():
     for urs in logged_in_users:
         urs.save()
     
-
+def force_reload():
+    global logged_in_users
+    liui=logged_in_users.keys()
+    logged_in_users={}
+    for id in liui:
+        user=load_user(id=id)
+        if user:
+            logged_in_users[id]=user
     
 
 

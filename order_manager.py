@@ -82,3 +82,27 @@ def get_orders(user_id):
             loaded_orders[order[0]] = Order(order[1], json.loads(order[2]), order[3], json.loads(order[4]), order[5], order[6], order[0], order[7], "", order[8] if order[8] != 0 else "")
             orders.append(loaded_orders[order[0]])
     return orders
+
+
+
+def force_reload():
+    global loaded_orders
+    liui = loaded_orders.keys()
+    loaded_orders = {}
+    for idd in liui:
+        order=load_order(id=idd)
+        if order:
+            loaded_orders[idd]=order
+
+
+
+
+
+def load_order(**args):
+    read_order = database.read_database(table="orders", col=list(args.keys())[0], search=list(args.values())[0])
+    if read_order:
+        if len(read_order)>0:
+            read_order = read_order[0]
+            loaded_orders[id] = Order(read_order[1], json.loads(read_order[2]), read_order[3], json.loads(read_order[4]), read_order[5], read_order[6], read_order[0], read_order[7], "", read_order[8] if read_order[8] != 0 else "")
+            
+    return False

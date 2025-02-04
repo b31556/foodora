@@ -74,7 +74,18 @@ def save_all():
         urs.save()
     
 
+def force_reload():
+    global logged_in_users
+    liui=logged_in_users.keys()
+    logged_in_users={}
+
+    for idd in liui:
+        user=load_user(id=idd)
+        if user:
+            logged_in_users[idd]=user
+
     
+
 
 
 
@@ -82,8 +93,8 @@ def save_all():
 
 def load_user(**args):
     dat=database.read_database("auth",list(args.keys())[0],list(args.values())[0])
-    if len(dat)>0:
-        return User(dat[0][1],dat[0][3],dat[0][2],dat[0][0],dat[0][6],json.loads(dat[0][7]),dat[0][5],dat[0][4])
-    else:
-        False
+    if dat:
+        if len(dat)>0:
+            return User(dat[0][1],dat[0][3],dat[0][2],dat[0][0],dat[0][6],json.loads(dat[0][7]),dat[0][5],dat[0][4])
+    False
 

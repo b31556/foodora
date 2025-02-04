@@ -114,12 +114,28 @@ def test():
                 elif command == "offline":
                     user.online = False
 
-            route=get_route(user.position["lat"],user.position["long"],user.destination["lat"],user.destination["long"])
-            print(f"sent a query with {user.position['lat']},{user.position['long']} and {user.destination['lat']},{user.destination['long']}")
-            return json.dumps({"route":route,"destination":{"lat":user.destination["lat"], "long":user.destination["long"]},"online":"Várakozás a feladat kiosztására" if user.online and user.inprogress_order == "" else "Nem vagy elérhető" if user.inprogress_order == "" else f"Deliverying from a {om.get(user.inprogress_order).restaurant}"}),210
+            #route=get_route(user.position["lat"],user.position["long"],user.destination["lat"],user.destination["long"])
+            #print(f"sent a query with {user.position['lat']},{user.position['long']} and {user.destination['lat']},{user.destination['long']}")
+            return json.dumps({"destination":{"lat":user.destination["lat"], "long":user.destination["long"]},"online":"Várakozás a feladat kiosztására" if user.online and user.inprogress_order == "" else "Nem vagy elérhető" if user.inprogress_order == "" else f"Deliverying from a {om.get(user.inprogress_order).restaurant}"}),210
         else:
             return "Invalid token", 401
     else:
         return "Missing data", 401
 
+
+
+@app.route("/api/getroute", methods=["POST"])
+def getroute():
+    data=request.json
+    token = data.get("token")
+    if token:
+        session = sm.getbytoken(token)
+        if session:
+            user = session.user
+            route=get_route(user.position["lat"],user.position["long"],user.destination["lat"],user.destination["long"])
+            return json.dumps(route["points"]),211
+        else:
+            return "Invalid token", 401
+    else:
+        return "Missing data", 401
 

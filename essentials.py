@@ -81,7 +81,7 @@ def chose_best_delivery_man(list, location):
 
 def get_route(from_lat, from_long, to_lat, to_long):
     # GraphHopper API URL
-    url = f"http://localhost:8989/route?point={from_long},{from_lat}&point={to_lat},{to_long}&profile=car&locale=en"
+    url = f"http://localhost:8989/route?point={from_lat},{from_long}&point={to_lat},{to_long}&profile=car&locale=en"
 
     try:
         # Sending GET request to the GraphHopper API
