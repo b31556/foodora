@@ -8,6 +8,7 @@ import auth
 
 import user_webserver
 import delivery_webserver
+import admin_webserver
 
 
 import user_manager as um
@@ -24,19 +25,8 @@ auth.limiter=limiter
 
 app.register_blueprint(user_webserver.app)
 app.register_blueprint(delivery_webserver.app)
+app.register_blueprint(admin_webserver.app)
 
-@app.route("/reload")
-def reload():
-
-    token=request.args.get("t")
-    if token!="secret69":
-        return "not implamented yet", 501
-
-    starttime=time.time()
-    um.force_reload()
-    dm.force_reload()
-    om.force_reload()
-    return "fecthed data from database, took "+str(round(time.time()-starttime,5))+" seconds"
 
 
 def main():    

@@ -52,6 +52,9 @@ class Order:
     def save(self):
         database.set_row(table="orders",col="id",search=self.id,user=self.user_id,basket=json.dumps(self.order_items),restaurant=self.restaurant,location=json.dumps(self.location),price=self.price,status=self.status,createdat=round(self.createdat),deliveryman_id=self.deliveryman.id if self.deliveryman != "" and self.deliveryman != False else 0)
 
+    def unload(self):
+        self.save()
+        del loaded_orders[self.id]
 
 
 def get(id):
