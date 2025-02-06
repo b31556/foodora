@@ -3,6 +3,7 @@ from flask_limiter import Limiter, RateLimitExceeded
 import requests
 import random
 import time
+import yaml
 import json
 from database import read_database, write_database
 
@@ -20,6 +21,13 @@ def get_client_ip():
 import order_manager as om
 import delivery_manager as dm
 import delivery_session_manager as sm
+
+with open("config/configuration.yml","r") as f:
+    conf = yaml.load(f,yaml.BaseLoader)
+
+COUNTRY_NAME=conf["basic_infos"]["country"]
+COUNTRY_CODE=conf["basic_infos"]["country_code"]
+
 
 app = Blueprint('delivery', __name__, url_prefix='/delivery')
 
@@ -46,9 +54,9 @@ def register():
         if dm.getbyemail(email):
             return "Email already in use", 400
         if not is_coordinates_in_hungary(float(lat),float(long)):
-            return "Coordinates not in Hungary", 400
-        if get_country_code_by_ip(get_client_ip())!="HU":
-            return "IP not from Hungary", 400
+            return f"Coordinates not in {COUNTRY_NAME}", 400
+        if get_country_code_by_ip(get_client_ip())!=COUNTRY_CODE:
+            return f"IP not from {COUNTRY_NAME}", 400
         user = dm.make(name, passw, email, vehicle, {"lat":float(lat),"long":float(long)}, profilepic)
         return f"{sm.make(user).token}&{user.token}",200
     else:

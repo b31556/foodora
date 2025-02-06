@@ -17,6 +17,7 @@ async function confirmlocation(){
         window.location.href = "/payment";
     }
     else {
-        alert(response.text);
+        const message= await response.text()
+        alert(message);
     }
 }

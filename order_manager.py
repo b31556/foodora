@@ -56,6 +56,10 @@ class Order:
         self.save()
         del loaded_orders[self.id]
 
+    def delete(self):
+        del loaded_orders[self.id]
+        database.delete_row(table="orders",col="id",search=self.id)
+
 
 def get(id):
     id = int(id)
@@ -106,6 +110,18 @@ def load_order(**args):
     if read_order:
         if len(read_order)>0:
             read_order = read_order[0]
-            loaded_orders[id] = Order(read_order[1], json.loads(read_order[2]), read_order[3], json.loads(read_order[4]), read_order[5], read_order[6], read_order[0], read_order[7], "", read_order[8] if read_order[8] != 0 else "")
+            loaded_orders[read_order[0]] = Order(read_order[1], json.loads(read_order[2]), read_order[3], json.loads(read_order[4]), read_order[5], read_order[6], read_order[0], read_order[7], "", read_order[8] if read_order[8] != 0 else "")
             
     return False
+
+
+#DONT USE IN PRODuction DANGEROUS
+def load_all():
+    global loaded_orders
+    dw=database.read_database('orders')
+    if not dw:
+        return False
+    for read_order in dw:
+        loaded_orders[read_order[0]] = Order(read_order[1], json.loads(read_order[2]), read_order[3], json.loads(read_order[4]), read_order[5], read_order[6], read_order[0], read_order[7], "", read_order[8] if read_order[8] != 0 else "")
+    return True
+

@@ -23,6 +23,8 @@ class User:
     def auth(self,passw):
         return self.passw==passw
     
+    def delete(self):
+        database.delete_row(table="auth",col="id",search=self.id)
 
     def save(self):
         database.set_row(table="auth",col="id",search=self.id,name=self.name,email=self.email,pfp=self.profilepicture,id=self.id,passw=self.passw,createdat=round(self.createdat),data=json.dumps(self.data),token=self.token)

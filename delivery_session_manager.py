@@ -1,12 +1,16 @@
 import random
 import json
 import time
+import yaml
 import delivery_manager  as um
 
 save_file="activesessions.json"
 
-SESSION_IDLE_TIMEOUT=60*2 # if you idle for 10 min (exit app) session is closed
-MAX_TIMEOUT=60*60*8 # 8 hour if the max you have to relogin
+with open("config/configuration.yml","r") as f:
+    conf = yaml.load(f,yaml.BaseLoader)
+
+SESSION_IDLE_TIMEOUT=eval(conf["delivery_session_config"]["session_idle_timeout"])
+MAX_TIMEOUT=eval(conf["delivery_session_config"]["max_timeout"])
 
 sessions={}
 

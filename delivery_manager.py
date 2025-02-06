@@ -28,6 +28,13 @@ class User:
 
     def auth(self,passw):
         return self.passw==passw
+
+    def unload(self):
+        del logged_in_users[self.id]
+
+    def delete(self):
+        del logged_in_users[self.id]
+        database.delete_row("delivery_mans",col="id",search=self.id)
     
     def save(self):
         database.set_row(table="delivery_mans",col="id",search=self.id,name=self.name,email=self.email,pfp=self.profilepicture,id=self.id,passw=self.passw,createdat=round(self.createdat),data=json.dumps(self.data),token=self.token,vehicle=self.vehicle,position=json.dumps(self.position),destination=json.dumps(self.destination),inprogress_order=self.inprogress_order)
@@ -99,4 +106,19 @@ def load_user(**args):
             return User(dat[1],dat[4],dat[2],dat[8],json.loads(dat[9]),json.loads(dat[10]),json.loads(dat[11]),dat[0],dat[3],json.loads(dat[6]),dat[7],dat[5])
     
     False
+
+
+
+#DONT USE IN PRODuction DANGEROUS
+def load_all():
+    global logged_in_users
+    dw=database.read_database('delivery_mans')
+    if not dw:
+        return False
+    for read_order in dw:
+        dat=read_order
+        logged_in_users[read_order[0]] = User(dat[1],dat[4],dat[2],dat[8],json.loads(dat[9]),json.loads(dat[10]),json.loads(dat[11]),dat[0],dat[3],json.loads(dat[6]),dat[7],dat[5])
+    return True
+
+
 

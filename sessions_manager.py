@@ -1,12 +1,17 @@
 import random
 import json
+import yaml
 import time
 import user_manager  as um
 
 save_file="activesessions.json"
 
-SESSION_IDLE_TIMEOUT=60*0.5 # if you idle for 10 min (exit app) session is closed
-MAX_TIMEOUT=60*60*3 # 3 hour if the max you have to relogin
+
+with open("config/configuration.yml","r") as f:
+    conf = yaml.load(f,yaml.BaseLoader)
+
+SESSION_IDLE_TIMEOUT=eval(conf["session_config"]["session_idle_timeout"])
+MAX_TIMEOUT=eval(conf["session_config"]["max_timeout"])
 
 sessions=[]
 
@@ -30,18 +35,23 @@ class Session:
             return False
         return True
 
+    def use(self):
+        self.lastaction = time.time()
+
 
 def get(sessionid):
     """returns the Session object by the session id NOT THE TOKEN!"""
     for session in sessions:
-        if str(session.id) == str(sessionid):
+        if str(session.id) == str(sessionid) and session.is_valid():
+            session.use()
             return session
     return False
         
 def getbytoken(token: str):
     """returns the Session object by a session token"""
     for session in sessions:
-        if session.token == token:
+        if session.token == token and session.is_valid():
+            session.use()
             return session
     return False
 

@@ -2,6 +2,7 @@ from flask import Blueprint, render_template, request, redirect, url_for, jsonif
 from flask_limiter import Limiter, RateLimitExceeded
 import requests
 import random
+import yaml
 import time
 from database import read_database, write_database
 
@@ -11,8 +12,15 @@ import user_manager as um
 
 app = Blueprint('auth', __name__, url_prefix='/auth')
 
-CLIENT_ID = '541304192962-2c2uqhq1i5c3p0g64qqcvssoakbibon1.apps.googleusercontent.com'   ## GOOGLE CLOUD CREDENTIALS
-CLIENT_SECRET = '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'
+
+with open("config/configuration.yml","r") as f:
+    conf = yaml.load(f,yaml.BaseLoader)
+
+CLIENT_ID = conf["auth"]["google_CLIENT_ID"]
+CLIENT_SECRET = conf["auth"]["google_CLIENT_SECRET"]
+REDIRECT_URI = conf["auth"]["google_REDIRECT_URI"]
+
+
 
 
 def get_client_ip():
@@ -27,7 +35,7 @@ def get_client_ip():
 
 limiter=None
 
-REDIRECT_URI = 'http://nationscity.eu:8945/auth/callback'
+
 
 
 
@@ -82,6 +90,8 @@ def loginbytokenapi():
 @app.route('/loginbygoogle')
 def loginbygoogle():
     """Redirect to Google's OAuth 2.0 authentication page."""
+    if CLIENT_ID == "" or CLIENT_SECRET == "" or REDIRECT_URI == "":
+        return "<h1>the login by google option is not available at the moment due to incomplete or missing configuration  </h1><button onclick='document.location.pathname=\"/login\"'>Back</button>"
     google_auth_url = (
         f"https://accounts.google.com/o/oauth2/v2/auth?client_id={CLIENT_ID}"
         f"&redirect_uri={REDIRECT_URI}&response_type=code&scope=openid email profile"

@@ -1,0 +1,30 @@
+basic_infos:
+  phone: "+36 20 623 9555"
+  email: "info@szallas.hu"
+  country: Hungary
+  country_code: "HU"
+
+database_infos:
+  type: "mysql" # sqlite or mysql  (mysql is recomended)
+  host: "localhost"  # these are not needed for sqlite
+  user: "pincer"
+  password: "authinside?"
+  database: "pincer"  # or db file name with sqlite (inside the data folder)
+
+routing:
+  service: "graphhopper"  # graphhopper (self hosted) or openrouteservice (api key required)
+  api_key: ""
+
+auth:
+  admin_password: "mester911"
+  google_CLIENT_ID: "541304192962-2c2uqhq1i5c3p0g64qqcvssoakbibon1.apps.googleusercontent.com"   ## GOOGLE CLOUD CREDENTIALS for login with google
+  google_CLIENT_SECRET: "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"    #leave these empty to disable login by google    get these credentials at google cloud console
+  google_REDIRECT_URI: "http://nationscity.eu:8945/auth/callback"    # http or https://{you server domain or ip and port}/auth/callback
+
+session_config:
+  session_idle_timeout: "60*30" # if you idle for 30 min session is closed
+  max_timeout: "60*60*3" # 3 hour if the max you have to relogin
+delivery_session_config:
+  session_idle_timeout: "60*10" # if you idle for 30 min session is closed, THE APP SENDS A REQUEST AUTOMATICLY SO ITS A GOOD IDEA TO SET IT LOOW
+  max_timeout: "60*60*5" # 3 hour if the max you have to relogin, lot for a long workday
+

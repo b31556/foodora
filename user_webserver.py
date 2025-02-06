@@ -7,7 +7,7 @@ import requests
 import time
 import random
 import os
-from essentials import get_country_code_by_ip
+from essentials import get_country_code_by_ip, reverse_geocode, is_coordinates_in_hungary
 
 import auth
 
@@ -22,10 +22,17 @@ app.register_blueprint(auth.app)
 
 limiter=None
 
+with open("config/configuration.yml","r") as f:
+    conf = yaml.load(f,yaml.BaseLoader)
 
-GUEST_ICON = "https://tse3.mm.bing.net/th?id=OIP.qcjhP7DA8HG_kIRvZDoDvQHaHa&pid=Api&P=0&h=220"
+COUNTRY_NAME=conf["basic_infos"]["country"]
+COUNTRY_CODE=conf["basic_infos"]["country_code"]
 
-with open("data/configuration.yml","r") as f:
+
+GUEST_ICON = "/static/images/guest.jpg"
+
+
+with open("config/configuration.yml","r") as f:
     conf = yaml.load(f,yaml.BaseLoader)
     
 PHONE=conf["basic_infos"]["phone"]
@@ -356,6 +363,11 @@ def confirmlocation():
         location=data.get("search")
         hn = data.get("hn")
         user.data["location"]={"location":location,"hn":hn}
+        cords=reverse_geocode(location)
+        if not is_coordinates_in_hungary(lat=cords[0],lon=cords[1]):
+            return f"You are not in {COUNTRY_NAME}; you cant order to outside the country yet",400
+        if not get_country_code_by_ip(request.headers.get('X-Forwarded-For', request.remote_addr)) == COUNTRY_CODE:
+            return f"You are not in {COUNTRY_NAME}; you cant order from outside the country, this may happened bc you use a vpn",400
         user.save()
         return "ok",200
     else:

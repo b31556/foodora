@@ -1,7 +1,10 @@
 from flask import Flask, request
 import flask_limiter
 import os
-import time
+
+if not os.path.exists("config/configuration.yml"):
+    print("🔴 Configuration file not found. Please create a configuration file, or run the setup py (recomended)")
+    exit()
 
 import auth
 
