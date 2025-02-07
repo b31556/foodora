@@ -49,7 +49,11 @@ def get_place_by_coordinates(latitude, longitude):
     data = response.json()
     
     if 'address' in data:
-        return f"{data['address']['road']}, {data['address']['town']}"
+        try:
+            town=data["address"]['town'] if 'town' in data["address"] else data["address"]["city"]
+        except:
+            town = ""
+        return f"{data['address']['road']}, {town}"
     else:
         return "Location not found"
 
@@ -94,10 +98,17 @@ def chose_best_delivery_man(list, location):
     best_dist=999999999999
     for man in list:
         if man.inprogress_order=="" and man.online: # ha nincs éppen szállításban
-            dist=haversine(man.position["lat"],man.position["long"],lat,long)
-            if dist<best_dist:
-                best=man
-                best_dist=dist
+            if man.hassession:
+                if man.hassession == "yes":
+                    dist=haversine(man.position["lat"],man.position["long"],lat,long)
+                    if dist<best_dist:
+                        best=man
+                        best_dist=dist
+                elif man.hassession.is_valid():
+                    dist=haversine(man.position["lat"],man.position["long"],lat,long)
+                    if dist<best_dist:
+                        best=man
+                        best_dist=dist
     return best
 
 

@@ -24,13 +24,18 @@ class Session:
         self.lastaction = time.time() if lastaction=="" else lastaction
         self.token = generateSessionToken() if token == "" else token
         self.id = random.randint(10000000000000,99999999999999) if id == "" else id
+        user.hassession = self
+
+
 
     def is_valid(self):
         if time.time() - self.lastaction > SESSION_IDLE_TIMEOUT:
             del sessions[self.user.id]
+            self.user.hassession = False
             return False
         if time.time() - self.createdat > MAX_TIMEOUT:
             del sessions[self.user.id]
+            self.user.hassession = False
             return False
         return True
     

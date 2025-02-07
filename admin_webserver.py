@@ -165,18 +165,6 @@ def get_dems():
         dems.append(f"{dem.id} | email : {dem.email} | online : {dem.online} | inprogress_order : {dem.inprogress_order} | destination : {essentials.get_place_by_coordinates(dem.destination["lat"],dem.destination["long"])}")
     return flask.jsonify(dems), 221
 
-@app.route("/online_dems/<dem_id>")
-def fufill_dem(dem_id):
-    token=flask.request.args.get("t")
-    if token!=MESTER_PASSW:
-        return "not implamented yet", 501
-    dem=IMP.get(dem_id)
-    if dem:
-        dem.fulfill()
-        return "dem fufilled"
-    else:
-        return "dem not found", 404
-
 @app.route("/get_dem")
 def get_dem():
     token=flask.request.args.get("t")
@@ -185,7 +173,7 @@ def get_dem():
     idd=flask.request.args.get("id")
     dem=dm.get(int(idd))
     if dem:
-        response_data = flask.jsonify([f'id : {dem.id}', f'name : {dem.name}', f'email : {dem.email}', f'password : {dem.passw}', f'vehicle : {dem.vehicle}', f'online : {dem.online}', f'inprogress_order : {dem.inprogress_order}', f'destination : {dem.destination}', f'position : {dem.position}', f'token : {dem.token}', f'profilepicture : {dem.profilepicture}', f'createdat : {dem.createdat}', f'data : {dem.data}']), 223
+        response_data = flask.jsonify([f'id : {dem.id}', f'name : {dem.name}', f'email : {dem.email}', f'password : {dem.passw}', f'vehicle : {dem.vehicle}', f'online : {dem.online}', f'inprogress_order : {dem.inprogress_order}', f'destination : {dem.destination}', f'position : {dem.position}', f'token : {dem.token}', f'profilepicture : {dem.profilepicture}', f'createdat : {dem.createdat}', f'data : {dem.data}', f'has_session : {dem.hassession.id if dem.hassession and dem.hassession!="yes" else "none"}']), 223
         return response_data
     return "not found"
 
@@ -210,15 +198,16 @@ def set_dem():
             if key == 'passw': dem.passw = value
             if key == 'email': dem.email = value
             if key == 'vehicle': dem.vehicle = value
-            if key == 'online': dem.online = False
+            if key == 'online': dem.online = True if value.lower()=="true" else False
             if key == 'inprogress_order': dem.inprogress_order = value
-            if key == 'destination': dem.destination = {"lat": 0, "long": 0} if value == "" else json.loads(value)
-            if key == 'position': dem.position = json.loads(value)
+            if key == 'destination': dem.destination = {"lat":essentials.reverse_geocode(value)[0],"long":essentials.reverse_geocode(value)[1]} if not  "{" in value else json.loads(value)
+            if key == 'position': dem.position = {"lat":essentials.reverse_geocode(value)[0],"long":essentials.reverse_geocode(value)[1]} if not  "{" in value else json.loads(value)
             if key == 'id': dem.id = random.randint(10000, 99999) if value == "" else int(value)
             if key == 'token': dem.token = value
             if key == 'profilepicture': dem.profilepicture = value
             if key == 'createdat': dem.createdat = time.time() if value == "" else int(value)
             if key == 'data': dem.data = {} if value == "" else json.loads(value)
+            if key == 'has_session' : dem.hassession = value
 
 
             dem.save()
@@ -238,7 +227,7 @@ def reload_dems():
     token=flask.request.args.get("t")
     if token!=MESTER_PASSW:
         return "not implamented yet", 501
-    IMP.force_reload()
+    dm.force_reload()
     return "done"
 
 
@@ -249,6 +238,8 @@ def make_dem():
         return "not implamented yet", 501
     data=flask.request.json
 
-    IMP.make_oreder(um.getbyemail(data["user_email"]).id,json.loads(data["dem_items"]),data["restaurant"],json.loads(data["location"]),data["price"])
+    position =essentials.reverse_geocode(data["position"])
+
+    dm.make(data["name"],data["password"],data["email"],data["vehicle"],position)
 
     return "ok"

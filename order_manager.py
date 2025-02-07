@@ -19,7 +19,7 @@ class Order:
         self.location = location
         self.price = price
         self.status = status
-        self.deliveryman = deliveryman if deliveryman != "" else dm.get(deliveryman_id)
+        self.deliveryman = dm.get(deliveryman_id) if deliveryman_id != "" else deliveryman
 
 
     def fulfill(self):
@@ -62,7 +62,10 @@ class Order:
 
 
 def get(id):
-    id = int(id)
+    try:
+        id = int(id)
+    except:
+        return False
     if id in loaded_orders:
         return loaded_orders[id]
     read_order = database.read_database(table="orders", col="id", search=id)

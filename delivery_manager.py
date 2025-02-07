@@ -11,7 +11,7 @@ def generateLongLivedToken():
 
 
 class User:
-    def __init__(self, name, passw, email, vehicle, position: dict["lat": int,"long": int], destination="", inprogress_order = "", id="", profilepicture="", data="", token="", createdat=""):
+    def __init__(self, name, passw, email, vehicle, position: dict["lat": int,"long": int], destination="", inprogress_order = {}, id="", profilepicture="", data="", token="", createdat=""):
         self.name = name
         self.passw = passw
         self.email = email
@@ -25,6 +25,7 @@ class User:
         self.profilepicture = profilepicture
         self.createdat = time.time() if createdat=="" else int(createdat)
         self.data = {} if data=="" else data
+        self.hassession=False
 
     def auth(self,passw):
         return self.passw==passw
@@ -42,7 +43,7 @@ class User:
 def make(name,passw, email, vehicle, position: dict["lat": int,"long": int], profilepic=""):
     user = User(name, passw, email, profilepicture=profilepic, vehicle=vehicle, position=position)
     logged_in_users[user.id]=user
-    database.write_database(table="delivery_mans",name=name,email=email,pfp=profilepic,id=user.id,passw=passw,createdat=round(user.createdat),data=json.dumps({}),token=user.token,vehicle=vehicle,position=json.dumps(position),destination=json.dumps({"lat":0,"long":0}),inprogress_order=user.inprogress_order)
+    database.write_database(table="delivery_mans",name=name,email=email,pfp=profilepic,id=user.id,passw=passw,createdat=round(user.createdat),data=json.dumps({}),token=user.token,vehicle=vehicle,position=json.dumps(position),destination=json.dumps({"lat":0,"long":0}),inprogress_order=json.dumps(user.inprogress_order))
     return user
 
 def get(id):
@@ -103,7 +104,7 @@ def load_user(**args):
     if dat:
         if len(dat)>0:
             dat=dat[0]
-            return User(dat[1],dat[4],dat[2],dat[8],json.loads(dat[9]),json.loads(dat[10]),json.loads(dat[11]),dat[0],dat[3],json.loads(dat[6]),dat[7],dat[5])
+            return User(dat[1],dat[4],dat[2],dat[8],json.loads(dat[9]),json.loads(dat[10]),dat[11],dat[0],dat[3],json.loads(dat[6]),dat[7],dat[5])
     
     False
 
@@ -117,7 +118,7 @@ def load_all():
         return False
     for read_order in dw:
         dat=read_order
-        logged_in_users[read_order[0]] = User(dat[1],dat[4],dat[2],dat[8],json.loads(dat[9]),json.loads(dat[10]),json.loads(dat[11]),dat[0],dat[3],json.loads(dat[6]),dat[7],dat[5])
+        logged_in_users[read_order[0]] = User(dat[1],dat[4],dat[2],dat[8],json.loads(dat[9]),json.loads(dat[10]),dat[11],dat[0],dat[3],json.loads(dat[6]),dat[7],dat[5])
     return True
 
 

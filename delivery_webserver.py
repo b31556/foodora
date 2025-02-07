@@ -111,6 +111,8 @@ def test():
     lat = data.get("lat")
     long = data.get("long")
     command = data.get("command")
+    if not token:
+        return "MIssing token", 403
     if token and lat and long:
         session = sm.getbytoken(token)
         if session:
@@ -126,7 +128,7 @@ def test():
             #print(f"sent a query with {user.position['lat']},{user.position['long']} and {user.destination['lat']},{user.destination['long']}")
             return json.dumps({"destination":{"lat":user.destination["lat"], "long":user.destination["long"]},"online":"Várakozás a feladat kiosztására" if user.online and user.inprogress_order == "" else "Nem vagy elérhető" if user.inprogress_order == "" else f"Deliverying from a {om.get(user.inprogress_order).restaurant}"}),210
         else:
-            return "Invalid token", 401
+            return "Invalid token", 403
     else:
         return "Missing data", 401
 
@@ -136,14 +138,27 @@ def test():
 def getroute():
     data=request.json
     token = data.get("token")
+    lat=data.get("lat")
+    long=data.get("long")
     if token:
         session = sm.getbytoken(token)
         if session:
             user = session.user
-            route=get_route(user.position["lat"],user.position["long"],user.destination["lat"],user.destination["long"])
-            return json.dumps(route["points"]),211
+            if lat and long:
+                user.position = {"lat":float(lat),"long":float(long)}
+
+            
+            try:
+                route=get_route(user.position["lat"],user.position["long"],user.destination["lat"],user.destination["long"])
+                return json.dumps(route["points"]),211
+            
+            except:
+                pass
+
+            return jsonify({"message":"error with routing"}),500
+
         else:
-            return "Invalid token", 401
+            return "Invalid token", 403
     else:
-        return "Missing data", 401
+        return "Missing data", 403
 

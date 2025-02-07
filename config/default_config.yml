@@ -1,0 +1,30 @@
+basic_infos:
+  phone: "+36 00 000 0000"
+  email: "info@example.com"
+  country: Hungary
+  country_code: "HU"
+
+database_infos:
+  type: "sqlite" # sqlite or mysql  (mysql is recomended)
+  host: ""  # these are not needed for sqlite
+  user: ""
+  password: ""
+  database: "pincer"  # or db file name with sqlite (inside the data folder)
+
+routing:
+  service: "graphhopper"  # graphhopper (self hosted) or openrouteservice (api key required)
+  api_key: ""
+
+auth:
+  admin_password: "mester911"
+  google_CLIENT_ID: ""   ## GOOGLE CLOUD CREDENTIALS for login with google
+  google_CLIENT_SECRET: ""    #leave these empty to disable login by google    get these credentials at google cloud console
+  google_REDIRECT_URI: "http://server:port/auth/callback"    # http or https://{you server domain or ip and port}/auth/callback
+
+session_config:
+  session_idle_timeout: "60*30" # if you idle for 30 min session is closed
+  max_timeout: "60*60*3" # 3 hour if the max you have to relogin
+delivery_session_config:
+  session_idle_timeout: "60*10" # if you idle for 30 min session is closed, THE APP SENDS A REQUEST AUTOMATICLY SO ITS A GOOD IDEA TO SET IT LOOW
+  max_timeout: "60*60*5" # 3 hour if the max you have to relogin, lot for a long workday
+

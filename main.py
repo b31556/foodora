@@ -3,8 +3,16 @@ import flask_limiter
 import os
 
 if not os.path.exists("config/configuration.yml"):
-    print("🔴 Configuration file not found. Please create a configuration file, or run the setup py (recomended)")
-    exit()
+    if os.path.exists("config/default_config.yml"):
+        with open("config/default_config.yml", "r") as de:
+            with open("config/configuration.yml", "a") as co:
+                co.write(de.read())
+    else:
+        print("🔴 Configuration file not found. Please create a configuration file, or run the setup py (recomended)")
+        exit()
+    
+    print("❗ Configuration file not found. using default config, run the setup py to make a config file")
+    
 
 import auth
 
