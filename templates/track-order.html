@@ -43,7 +43,7 @@
                     {% for segment in segments %}
                     <div class="segment" 
                          style="background-image: url('{{ segment.background }}');"
-                         onclick="navigateToRestaurant('{{ segment.name }}')">
+                         onclick="document.location.pathname = 'track-order/{{ segment.id }}'">
                         <img src="{{ segment.logo }}" alt="{{ segment.restaurant}} Logo" class="segment-logo">
                         <h1 class="status_string">{{ segment.status }}</h1>
                         <h3 class="segment-title">{{ segment.restaurant }}</h3>

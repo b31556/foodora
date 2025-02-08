@@ -428,6 +428,20 @@ def trackorder():
     else:
         return flask.redirect("/login?redirect=/track-order")
 
+@app.route("/track-order/<id>")
+def trackorder(id):
+    token=request.cookies.get("sessiontoken")
+    ses=sm.getbytoken(token)
+    if ses:
+        user=ses.user
+        orders=om.get_orders(user.id)
+        req=om.get(id)
+        if not req:
+            return flask.redirect("/track-order")
+        if not req in orders:
+            return flask.redirect("/track-order")
+        
+
 
 @app.errorhandler(500)
 def error(e):

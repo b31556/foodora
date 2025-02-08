@@ -3,6 +3,7 @@ basic_infos:
   email: "info@example.com"
   country: Hungary
   country_code: "HU"
+  currency: "HUF"
 
 database_infos:
   type: "sqlite" # sqlite or mysql  (mysql is recomended)
