@@ -3,6 +3,7 @@ import subprocess
 import sys
 sys.path.append('setup_helper/libs')
 import yaml
+import asyncio
 
 
 print("""
@@ -232,28 +233,11 @@ def graph(location):
             except:
                 print("\n❌ failed to download the map data!")
             
-            print("testing graphhoper . . . . ")
-            time.sleep(0.5)
-            try:
-                process = subprocess.Popen(['java', f'-Ddw.graphhopper.datareader.file={location.split("/")[-1]}-latest.osm.pbf', '-jar', 'graphhopper-web-10.0.jar', 'server', 'config-example.yml'],cwd="graphhoper")
-                while True:
-                    if process.poll() is not None:
-                        print("\n❌ failed to start graphhoper!")
-                        break
-                    import requests
-                    response = requests.get('http://localhost:8989/health')
-                    if response.status_code == 200:
-                        print("\n\n\n✅ Graphhoper is working sucessfully! \n\n")
-                        
-                        process.terminate()
-                        process.wait()
-
-                        break
-                    time.sleep(1)
-            except:
-                print("\n❌ failed to start graphhoper!")
+            
         except:
             print("\n❌ failed to download the Graphhoper!")
+
+
 
 def database():
 
@@ -271,7 +255,7 @@ do = input("what do you wanna do? Complete setup, Reconfigure, Install requireme
 if do.lower() == "i":
     req()
 elif do.lower() == "g":
-    country_location = input("region osm file download path ( ususally /continent/country/city or /continent/country if you want the whole country ) [/europe/hungary] > ")
+    country_location = input("region osm file download path ( ususally /continent/country/city or /continent/country if you want the whole country , check out https://download.geofabrik.de/ )  (HIGHLY RECOMMENDED TO CHOSE A CITY FOR FASTER LOAD TIME)  [/europe/hungary] > ")
     if country_location == "":
         country_location = "/europe/hungary"
     graph(country_location)

@@ -1,5 +1,8 @@
 from flask import Flask, request
+import requests
 import flask_limiter
+import yaml
+import subprocess
 import os
 
 if not os.path.exists("config/configuration.yml"):
@@ -13,6 +16,23 @@ if not os.path.exists("config/configuration.yml"):
     
     print("❗ Configuration file not found. using default config, run the setup py to make a config file")
     
+with open("config/configuration.yml","r") as f:
+    conf = yaml.load(f,yaml.BaseLoader)
+
+base_service=conf["routing"]["service"]
+
+if base_service=="graphhoper":
+    try:
+        requests.get("127.0.0.1:8989/health")
+    except:
+        process = subprocess.Popen(
+            ["java", f"-Ddw.graphhopper.datareader.file={yk}-latest.osm.pbf", "-jar", "graphhopper*.jar", "server", "config-example.yml"],
+            cwd="graphhoper"  # Set the working directory
+            )
+
+
+
+
 
 import auth
 
