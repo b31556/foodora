@@ -414,7 +414,7 @@ def dopayment():
 
 
 @app.route("/track-order")
-def trackorder():
+def trackorders():
     token = request.cookies.get("sessiontoken")
     user = sm.getbytoken(token)
     if user:

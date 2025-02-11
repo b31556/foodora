@@ -4,7 +4,7 @@ import flask_limiter
 import yaml
 import subprocess
 import os
-
+import time
 if not os.path.exists("config/configuration.yml"):
     if os.path.exists("config/default_config.yml"):
         with open("config/default_config.yml", "r") as de:
@@ -21,14 +21,28 @@ with open("config/configuration.yml","r") as f:
 
 base_service=conf["routing"]["service"]
 
-if base_service=="graphhoper":
+if base_service=="graphhopper":
     try:
-        requests.get("127.0.0.1:8989/health")
+        requests.get("localhost:8989/health")
     except:
+        print("starting graphhoper . . . . this will take some time")
+        ff = ""
+        for f in os.listdir("graphhoper"):
+            if f.endswith(".pbf"):
+                ff = f
         process = subprocess.Popen(
-            ["java", f"-Ddw.graphhopper.datareader.file={yk}-latest.osm.pbf", "-jar", "graphhopper*.jar", "server", "config-example.yml"],
+            
+            ["java", f"-Ddw.graphhopper.datareader.file={ff}", "-jar", "graphhopper-web-10.0.jar", "server", "config-example.yml"],
             cwd="graphhoper"  # Set the working directory
             )
+        while True:
+            try:
+                requests.get("localhost:8989/health")
+                print("✅ Started Graphhoper ")
+                break
+            except:
+                print("graphhoper not started yet . . .  (if you wish to run graphhoper as a service so you dont have to start it every time you can! visit documentation) ")
+            time.sleep(40)
 
 
 

@@ -1,1 +1,7 @@
 pyyaml
+flask
+flask_limiter
+json
+polyline
+sqlite3
+mysql.connector
