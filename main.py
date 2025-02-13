@@ -21,9 +21,9 @@ with open("config/configuration.yml","r") as f:
 
 base_service=conf["routing"]["service"]
 
-if base_service=="graphhopper":
-    try:
-        requests.get("localhost:8989/health")
+if base_service=="graphhopper" and 0==2 :
+    try: 
+        requests.get("http://localhost:8989/health")
     except:
         print("starting graphhoper . . . . this will take some time")
         ff = ""

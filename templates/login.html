@@ -28,8 +28,12 @@
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
 
-            await fetch(`/auth/login?email=${encodeURIComponent(email)}&pass=${encodeURIComponent(password)}`);
+            const au = await fetch(`/auth/login?email=${encodeURIComponent(email)}&pass=${encodeURIComponent(password)}`);
 
+            if (au.status == 344) {
+                alert(await au.text());
+            }else if (au.status == 522){}
+            else{
             
             const response = await fetch('/auth/confirm');
                 
@@ -38,11 +42,12 @@
                     document.getElementById('warning').textContent = data.message;
                 } else if (response.ok) {
                     window.location.href = response.url; // Follow the redirect
-                } else {
+                } 
+                else {
                     document.getElementById('warning').textContent = 'An unexpected error occurred. Please try again later.';
                 }
             
-        });
+        }});
 
         document.getElementById('google-login').addEventListener('click', function () {
             window.location.href = '/auth/loginbygoogle'; // Redirect to Google login

@@ -9,6 +9,8 @@ from database import read_database, write_database
 import sessions_manager as sm
 import user_manager as um
 
+import mail
+
 
 app = Blueprint('auth', __name__, url_prefix='/auth')
 
@@ -20,7 +22,7 @@ CLIENT_ID = conf["auth"]["google_CLIENT_ID"]
 CLIENT_SECRET = conf["auth"]["google_CLIENT_SECRET"]
 REDIRECT_URI = conf["auth"]["google_REDIRECT_URI"]
 
-
+email_confirm={}
 
 
 def get_client_ip():
@@ -170,11 +172,18 @@ def handle_new_user(email, passw, name, googlehandled, pfp, redirecturl):
         re=requests.get("https://picsum.photos/200")
         pfp=re.url
 
-    user = um.make(email.split("@")[0] if name == "" else name, passw, email, pfp)
-    session = sm.make(user)
+    if googlehandled:
+        user = um.make(email.split("@")[0] if name == "" else name, passw, email, pfp)
+        session = sm.make(user)
+        return create_response(session,googlehandled,redirecturl)
     
-
-    return create_response(session, googlehandled, redirecturl)
+    codee=''.join(random.choice("qwertzuiopasdfghjklyxcvbnm0123467899119") for i in range(10))
+    if mail.send_mail(email,"email_confirm", link="/auth/emailconfirm/"+codee):
+        email_confirm[codee]=[email.split("@")[0] if name == "" else name, passw, email, pfp]
+    
+        return "an email has been sent to you email", 344
+    else:
+        return "wrong", 522
 
 
 def create_response(session, googlehandled, redirecturl):
@@ -272,6 +281,16 @@ def callback():
         return handlelogin(user_info.get("email"),googlehandled=True,pfp=user_info.get("picture"),name=user_info.get("name"))
     else:
         return "email not verifried"
+
+
+@app.route("/emailconfirm/<code>")
+def emailconfirm(code):
+    if code in email_confirm:
+        user_datas=email_confirm.pop(code)
+        user=um.make(user_datas[0],user_datas[1],user_datas[2],user_datas[3])
+        return create_response(sm.make(user),True,request.cookies.get("redirect",""))
+        
+        
 
 
 

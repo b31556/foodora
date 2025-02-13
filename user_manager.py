@@ -6,8 +6,8 @@ import json
 logged_in_users={}
 
 
-def generateLongLivedToken():
-    return ''.join(random.choice('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ') for i in range(64))
+def generateToken(lenght):
+    return ''.join(random.choice('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ') for i in range(lenght))
 
 class User:
     def __init__(self, name, passw, email, id="", profilepicture="", data="", token="", createdat=""):
@@ -15,10 +15,11 @@ class User:
         self.passw = passw
         self.email = email
         self.id = random.randint(10000000000000,99999999999999) if id=="" else int(id)
-        self.token = generateLongLivedToken() if token=="" else token
+        self.token = generateToken(64) if token=="" else token
         self.profilepicture = profilepicture
         self.createdat = time.time() if createdat=="" else int(createdat)
         self.data = {} if data=="" else data
+        self.email_confirm_code=generateToken(10)
 
     def auth(self,passw):
         return self.passw==passw
@@ -65,6 +66,11 @@ def getbytoken(token):
         logged_in_users[id]=user
         return user
     return False
+
+def getbyemailtoken(token):
+    for user in logged_in_users.values():
+        if user.email_confirm_code==token:
+            return user
 
 def unload_user(id):
     if id in logged_in_users:
