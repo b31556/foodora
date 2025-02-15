@@ -3,32 +3,34 @@ import database as database
 import time
 import json
 
-from essentials import chose_best_delivery_man, reverse_geocode
+from essentials import chose_best_delivery_man, reverse_geocode, closest_restaurant
 
 loaded_orders = {}
 
 import delivery_manager as dm
 
 class Order:
-    def __init__(self, user_id, order_items, restaurant, location, price, status="ordered", id="", createdat="", deliveryman="", deliveryman_id=""):
+    def __init__(self, user_id, order_items, restaurant, location, price, status="ordered", id="", createdat="", deliveryman="", deliveryman_id="", restaurant_loc=""):
         self.user_id = user_id
         self.order_items = order_items
         self.id = random.randint(10000000000000,99999999999999) if id=="" else int(id)
         self.createdat = time.time() if createdat=="" else int(createdat)
         self.restaurant = restaurant
         self.location = location
+        
         self.price = price
         self.status = status
         self.deliveryman = dm.get(deliveryman_id) if deliveryman_id != "" else deliveryman
-
+        self.restaurant_locacation="" if restaurant_loc== "" else restaurant_loc
 
     def fulfill(self):
         selected_deliveryman = chose_best_delivery_man(dm.logged_in_users.values(), self.location["location"])
         if selected_deliveryman:
             self.deliveryman = selected_deliveryman
-            self.status = "picked up"
+            self.status = "given out"
+            self.restaurant_locacation=closest_restaurant((selected_deliveryman.position["lat"],selected_deliveryman.position["long"]),self.location["location"],self.restaurant)
             self.deliveryman.inprogress_order = self.id
-            self.deliveryman.destination = {"lat":reverse_geocode(self.location["location"])[0],"long":reverse_geocode(self.location["location"])[1]}
+            self.deliveryman.destination = self.restaurant_locacation #? {"lat":reverse_geocode(self.location["location"])[0],"long":reverse_geocode(self.location["location"])[1]}
             self.save()
             self.deliveryman.save()
             return True

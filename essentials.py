@@ -2,6 +2,7 @@ import requests
 import math
 import polyline
 import yaml
+import json
 
 with open("config/configuration.yml","r") as f:
     conf = yaml.load(f,yaml.BaseLoader)
@@ -168,4 +169,17 @@ def get_route(from_lat, from_long, to_lat, to_long, service=base_service, api_ke
         return None
 
 
+def closest_restaurant(from_location,location,restaurant):
+    with open(f"data/{restaurant}_locations.json") as f:
+        lis = json.load(f)
+    lat,long = reverse_geocode(location)
+    best=None
+    best_dist=999999999999
+    for man in lis:
+        dist=haversine(man[0],man[1],lat,long) + haversine(from_location[0],from_location[1],man[0],man[1])
+        if dist<best_dist:
+            best=man
+            best_dist=dist
+            
+    return best
 
