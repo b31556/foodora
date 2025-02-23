@@ -1,0 +1,133 @@
+test Email
+
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NextGen Transit - Jegyrendszer Fejlesztési Verseny</title>
+</head>
+<body style="background-color: #f8fafc; margin: 0; padding: 0; font-family: Arial, sans-serif; line-height: 1.6;">
+    <!-- Hero Section -->
+    <table width="100%" cellpadding="0" cellspacing="0" style="background: linear-gradient(135deg, #2563eb, #3b82f6); color: white; text-align: center; padding: 40px 20px;">
+        <tr>
+            <td>
+                <h1 style="font-size: 28px; font-weight: bold; margin-bottom: 16px;">🚋 NextGen Transit Challenge</h1>
+                <p style="font-size: 18px;">Új korszak a tömegközlekedésben</p>
+            </td>
+        </tr>
+    </table>
+
+    <!-- Main Content -->
+    <table width="100%" cellpadding="0" cellspacing="0" style="max-width: 600px; margin: 0 auto; padding: 20px;">
+        <!-- Verseny adatok -->
+        <tr>
+            <td style="background-color: white; border-radius: 8px; padding: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); margin-bottom: 20px;">
+                <h2 style="font-size: 24px; font-weight: bold; margin-bottom: 16px; color: #2563eb;">👥 Verseny adatok</h2>
+                <table width="100%" cellpadding="0" cellspacing="0">
+                    <tr>
+                        <td style="padding: 8px 0;">
+                            <strong>Csapatok:</strong> 1-6 fős csapatok
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 8px 0;">
+                            <strong>Leadási határidő:</strong> +2 hónap
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 8px 0;">
+                            <strong>Cél:</strong> Kijátszhatatlan jegyrendszer
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+
+        <!-- Követelmények -->
+        <tr>
+            <td style="background-color: white; border-radius: 8px; padding: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); margin-bottom: 20px;">
+                <h2 style="font-size: 24px; font-weight: bold; margin-bottom: 16px; color: #2563eb;">📋 Követelmények</h2>
+                <table width="100%" cellpadding="0" cellspacing="0">
+                    <tr>
+                        <td style="padding: 8px 0;">
+                            <strong>Weboldal:</strong> HTTPS, több aloldal
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 8px 0;">
+                            <strong>Android alkalmazás:</strong> .apk, jegyvásárlás
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 8px 0;">
+                            <strong>Jegyautomata:</strong> Érintőképernyős kijelző
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 8px 0;">
+                            <strong>Pénztári szoftver:</strong> Windows .exe
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 8px 0;">
+                            <strong>Ellenőri eszköz:</strong> Mobilalkalmazás vagy fizikai eszköz
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+
+        <!-- Technológiai eszköztár -->
+        <tr>
+            <td style="background-color: white; border-radius: 8px; padding: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); margin-bottom: 20px;">
+                <h2 style="font-size: 24px; font-weight: bold; margin-bottom: 16px; color: #2563eb;">🛠 Technológiai eszköztár</h2>
+                <table width="100%" cellpadding="0" cellspacing="0">
+                    <tr>
+                        <td style="padding: 8px 0;">
+                            <span style="background-color: #f59e0b; color: white; padding: 4px 12px; border-radius: 999px; display: inline-block; margin: 4px;">QR kód</span>
+                            <span style="background-color: #f59e0b; color: white; padding: 4px 12px; border-radius: 999px; display: inline-block; margin: 4px;">NFC</span>
+                            <span style="background-color: #f59e0b; color: white; padding: 4px 12px; border-radius: 999px; display: inline-block; margin: 4px;">Android</span>
+                            <span style="background-color: #f59e0b; color: white; padding: 4px 12px; border-radius: 999px; display: inline-block; margin: 4px;">Linux Szerver</span>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+
+        <!-- Idővonal -->
+        <tr>
+            <td style="background-color: white; border-radius: 8px; padding: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); margin-bottom: 20px;">
+                <h2 style="font-size: 24px; font-weight: bold; margin-bottom: 16px; color: #2563eb;">📅 Idővonal</h2>
+                <table width="100%" cellpadding="0" cellspacing="0">
+                    <tr>
+                        <td style="padding: 8px 0;">
+                            <strong>1. 2 hónap fejlesztés:</strong> Projektmunka és iterációk
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 8px 0;">
+                            <strong>2. Rendszer tesztelés:</strong> Contra team próbálkozások
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 8px 0;">
+                            <strong>3. Bemutató és zsűrizés:</strong> Videó és élő demonstráció
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+
+    <!-- Footer -->
+    <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #1e293b; color: white; text-align: center; padding: 20px;">
+        <tr>
+            <td>
+                <p style="margin: 0;">© 2024 NextGen Transit Challenge. Minden jog fenntartva.</p>
+                <p style="margin: 8px 0 0; font-size: 14px; color: #e2e8f0;">Készült ❤️ a közlekedés jövőjéért</p>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

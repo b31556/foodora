@@ -1,18 +1,120 @@
 Pincer delivery, Email confirmation
 
 
-Email confirmation
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirm Your Pincer Account</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+        
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #f7f9fc;
+            font-family: 'Poppins', Arial, sans-serif;
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 40px auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+            padding: 40px 30px;
+            text-align: center;
+        }
+        
+        .logo {
+            width: 120px;
+            margin-bottom: 20px;
+        }
+        
+        h1 {
+            color: white;
+            margin: 0;
+            font-weight: 700;
+            font-size: 28px;
+        }
+        
+        .content {
+            padding: 40px 30px;
+            color: #4a5568;
+            line-height: 1.6;
+        }
+        
+        .button {
+            display: inline-block;
+            background: #6366f1;
+            color: white !important;
+            padding: 16px 32px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            margin: 25px 0;
+            transition: transform 0.2s;
+        }
+        
+        .button:hover {
+            transform: translateY(-2px);
+        }
+        
+        .footer {
+            background: #f7f9fc;
+            padding: 30px;
+            text-align: center;
+            font-size: 14px;
+            color: #718096;
+        }
+        
+        @media (max-width: 620px) {
+            .container {
+                margin: 20px;
+            }
+            
+            .header {
+                padding: 30px 20px;
+            }
+            
+            h1 {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <img src="https://i.ibb.co/1J9BLw9r/logo.png" alt="Pincer Logo" class="logo">
+            <h1>Welcome to Pincer!</h1>
+        </div>
+        
+        <div class="content">
+            <p style="margin: 0 0 20px 0;">Hi there,</p>
+            <p style="margin: 0 0 20px 0;">Thank you for registering with Pincer - the premium food delivery service! Just one last step to complete your registration:</p>
+            
+            <center>
+                <a href="http://nationscity.eu:8945/{link}" class="button">Confirm Email Address</a>
+            </center>
+            
+            <p style="margin: 25px 0 20px 0;">If you didn't create a Pincer account, please ignore this email. This verification link will expire in 24 hours.</p>
+            
+            <p style="margin: 20px 0;">Bon appétit,<br>The Pincer Team</p>
+        </div>
+        
+        <div class="footer">
+            <p style="margin: 0;">© 2023 Pincer. All rights reserved.<br>Delivering culinary excellence</p>
+            <p style="margin: 15px 0 0 0;">Need help? <a href="mailto:support@pincer.com" style="color: #6366f1; text-decoration: none;">Contact our support team</a></p>
+        </div>
+    </div>
+</body>
+</html>
 
-You just registered to Pincer!
-the premium food delivery service
-
-
-To confirm your email address jsut click on this link: http://nationscity.eu:8945/{link}
-
-
-if you didn't registered just ignore this email
-
-
-
-What do you wanna eat? - you pincer team
 

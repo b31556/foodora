@@ -26,9 +26,10 @@ def send_mail(emailaddress,template="",subject="",body="",**args):
         
     if template!="":
         with open(f"config/email_template/{template}.txt","r") as f:
-            subject=f.readlines()[0]
+            lines=f.readlines()
+            subject=lines[0]
             body = ""
-            for line in f.readlines()[2:]:
+            for line in lines[2:]:
                 body+=line
 
 
@@ -41,7 +42,7 @@ def send_mail(emailaddress,template="",subject="",body="",**args):
 
     # Email body
     body = body.replace("{link}",args["link"])
-    msg.attach(MIMEText(body, "plain"))
+    msg.attach(MIMEText(body, "html"))
 
     # Send the email
     try:
@@ -55,3 +56,6 @@ def send_mail(emailaddress,template="",subject="",body="",**args):
     except Exception as e:
         print("Error:", e)
         return False
+
+if __name__=="__main__
+    send_mail("g37474008@gmail.com","test",link="")  # Replace with your
