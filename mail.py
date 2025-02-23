@@ -57,5 +57,5 @@ def send_mail(emailaddress,template="",subject="",body="",**args):
         print("Error:", e)
         return False
 
-if __name__=="__main__
+if __name__=="__main__":
     send_mail("g37474008@gmail.com","test",link="")  # Replace with your

@@ -72,6 +72,13 @@ def getbyemailtoken(token):
         if user.email_confirm_code==token:
             return user
 
+def getbyresettoken(token):
+    for user in logged_in_users.values():
+        if "reset_token" in user.data:
+            if user.data["reset_token"]==token:
+                return user
+    return False
+
 def unload_user(id):
     if id in logged_in_users:
         del logged_in_users[id]

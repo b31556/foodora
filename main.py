@@ -25,24 +25,31 @@ if base_service=="graphhopper" and 0==2 :
     try: 
         requests.get("http://localhost:8989/health")
     except:
-        print("starting graphhoper . . . . this will take some time")
-        ff = ""
-        for f in os.listdir("graphhoper"):
-            if f.endswith(".pbf"):
-                ff = f
-        process = subprocess.Popen(
-            
-            ["java", f"-Ddw.graphhopper.datareader.file={ff}", "-jar", "graphhopper-web-10.0.jar", "server", "config-example.yml"],
-            cwd="graphhoper"  # Set the working directory
-            )
-        while True:
-            try:
-                requests.get("localhost:8989/health")
-                print("✅ Started Graphhoper ")
-                break
-            except:
-                print("graphhoper not started yet . . .  (if you wish to run graphhoper as a service so you dont have to start it every time you can! visit documentation) ")
-            time.sleep(40)
+        chop=input("failed to connect to graphhopper do you wanna start it or start it as a service (you only have to start it once this way)? Start / Create service / Exit [s/C/e] ").lower()
+        if chop == 'e':
+            exit()
+        elif chop == 's':
+            print("starting graphhoper . . . . this will take some time")
+            ff = ""
+            for f in os.listdir("graphhoper"):
+                if f.endswith(".pbf"):
+                    ff = f
+            process = subprocess.Popen(
+                
+                ["java", f"-Ddw.graphhopper.datareader.file={ff}", "-jar", "graphhopper-web-10.0.jar", "server", "config-example.yml"],
+                cwd="graphhoper"  # Set the working directory
+                )
+            while True:
+                try:
+                    requests.get("localhost:8989/health")
+                    print("✅ Started Graphhoper ")
+                    break
+                except:
+                    print("graphhoper not started yet . . .  (if you wish to run graphhoper as a service so you dont have to start it every time you can! visit documentation) ")
+                time.sleep(30)
+        else:
+            pass
+
 
 
 

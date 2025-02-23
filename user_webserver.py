@@ -10,6 +10,7 @@ import os
 from essentials import get_country_code_by_ip, reverse_geocode, is_coordinates_in_hungary
 
 import auth
+import mail
 
 import sessions_manager as sm
 import user_manager as um
@@ -126,6 +127,63 @@ def profile():
     else:
         return flask.redirect("/login")
     
+
+@app.route("/profile/update", methods=["POST"])
+def update_profile():
+    token = request.cookies.get("sessiontoken")
+    user = sm.getbytoken(token)
+    if user:
+        user = user.user
+        new_name = request.form.get("name")
+        profile_picture = request.files.get("profile_picture")
+        
+        if new_name:
+            user.name = new_name
+        
+        if profile_picture:
+            picture_path = f"static/images/profiles/{user.id}.png"
+            profile_picture.save(picture_path)
+            user.profilepicture = f"/{picture_path}"
+        
+        user.save()
+        return flask.redirect("/profile")
+    else:
+        return flask.redirect("/login?redirect=/profile")
+
+
+@app.route("/profile/change-password", methods=["POST"])
+def change_password():
+    token = request.cookies.get("sessiontoken")
+    user = sm.getbytoken(token)
+    if user:
+        user = user.user
+        current_password = request.form.get("current_password")
+        new_password = request.form.get("new_password")
+        
+        if user.auth(current_password):
+            user.passw = new_password
+            user.save()
+            return flask.redirect("/profile")
+        else:
+            return "Current password is incorrect", 400
+    else:
+        return flask.redirect("/login?redirect=/profile")
+
+
+@app.route("/profile/change-email", methods=["POST"])
+def change_email():
+    token = request.cookies.get("sessiontoken")
+    user = sm.getbytoken(token)
+    if user:
+        user = user.user
+        new_email = request.form.get("new_email")
+        
+        user.email = new_email
+        user.save()
+        return flask.redirect("/profile")
+    else:
+        return flask.redirect("/login?redirect=/profile")
+
 
 @app.route("/contact")
 def contact():
@@ -441,6 +499,39 @@ def trackorder(id):
         if not req in orders:
             return flask.redirect("/track-order")
         
+
+@app.route("/forgot-password", methods=["GET", "POST"])
+def forgot_password():
+    if request.method == "GET":
+        return flask.render_template("forgot_password.html")
+    
+    if request.method == "POST":
+        email = request.json.get("email")
+        user = um.getbyemail(email)
+        if user:
+            reset_token = ''.join(random.choice("qwertzuiopasdfghjklyxcvbnm0123467899119") for i in range(10))
+            user.data["reset_token"] = reset_token
+            user.save()
+            mail.send_mail(email, "reset_password", link=f"/reset-password/{reset_token}")
+            return jsonify({"message": "A password reset link has been sent to your email."})
+        else:
+            return jsonify({"message": "Email not found."}), 404
+
+@app.route("/reset-password/<token>", methods=["GET", "POST"])
+def reset_password(token):
+    user = um.getbyresettoken(token)
+    if not user:
+        return "Invalid or expired token", 400
+    
+    if request.method == "GET":
+        return flask.render_template("reset_password.html", token=token)
+    
+    if request.method == "POST":
+        new_password = request.form.get("new_password")
+        user.passw = new_password
+        del user.data["reset_token"]
+        user.save()
+        return flask.redirect("/login")
 
 
 @app.errorhandler(500)

@@ -24,14 +24,13 @@
         <!-- Sidebar -->
         <aside class="sidebar">
             <div class="profile-picture">
-                <a href="/profile/edit-pic">
-                    <img src="{{ pfpurl }}" alt="Profile Picture" class="profile-img-large">
-                </a>
+                
+                <img src="{{ pfpurl }}" alt="Profile Picture" class="profile-img-large">
+                
             </div>
             <ul class="sidebar-options">
-                <li><a href="/profile/edit">Edit Profile</a></li>
-                <li><a href="/profile/change-password">Change Password</a></li>
-                <li><a href="/profile/change-email">Change Email</a></li>
+                
+                
                 <li><a href="/auth/logout">Logout</a></li>
 
             </ul>
@@ -48,7 +47,39 @@
                 <p><strong>Email:</strong> {{ email }}</p>
             </div>
 
-            
+            <!-- Add form to change name and profile picture -->
+            <div class="profile-edit">
+                <h3>Edit Profile</h3>
+                <form action="/profile/update" method="post" enctype="multipart/form-data">
+                    <label for="name">New Name:</label>
+                    <input type="text" id="name" name="name" required>
+                    <label for="profile_picture">New Profile Picture:</label>
+                    <input type="file" id="profile_picture" name="profile_picture" accept="image/*">
+                    <button type="submit">Update Profile</button>
+                </form>
+            </div>
+
+            <!-- Add form to change password -->
+            <div class="profile-edit">
+                <h3>Change Password</h3>
+                <form action="/profile/change-password" method="post">
+                    <label for="current_password">Current Password:</label>
+                    <input type="password" id="current_password" name="current_password" required>
+                    <label for="new_password">New Password:</label>
+                    <input type="password" id="new_password" name="new_password" required>
+                    <button type="submit">Change Password</button>
+                </form>
+            </div>
+
+            <!-- Add form to change email -->
+            <div class="profile-edit">
+                <h3>Change Email</h3>
+                <form action="/profile/change-email" method="post">
+                    <label for="new_email">New Email:</label>
+                    <input type="email" id="new_email" name="new_email" required>
+                    <button type="submit">Change Email</button>
+                </form>
+            </div>
         </main>
     </div>
     <script src="{{ url_for('static', filename='js/l.js') }}"></script>
