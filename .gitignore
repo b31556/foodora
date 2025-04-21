@@ -1,3 +1,4 @@
 config/configuration.yml
 static/images/profiles/*
 graphhoper/
+data/pincer.db
