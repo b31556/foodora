@@ -498,6 +498,8 @@ def trackorder(id):
             return flask.redirect("/track-order")
         if not req in orders:
             return flask.redirect("/track-order")
+
+    return req.json()
         
 
 @app.route("/forgot-password", methods=["GET", "POST"])
